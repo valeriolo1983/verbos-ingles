@@ -782,7 +782,7 @@ async function loadAudio(acc){
   if(AUD[acc])return;
   try{const r=await fetch("audio_"+acc+".json");if(r.ok)AUD[acc]=await r.json();}catch(e){}
 }
-(async()=>{ await loadAudio("ava"); await loadAudio("es"); applyCaps(); for(const k of ["sonia","gb","us"]){await loadAudio(k);} applyCaps(); })();
+(async()=>{ await loadAudio("ava"); await loadAudio("es"); applyCaps(); await loadAudio("sonia"); if(!AUD.ava&&!AUD.sonia){await loadAudio("gb");await loadAudio("us");} applyCaps(); })();
 const wid=w=>w.toLowerCase().replace(/[^a-z]+/g,"_").replace(/^_|_$/g,"");
 function clipId(v,key){ if(v.inf==="read"&&key!=="inf")return "red"; return wid(v[key]); }
 const player=new Audio();
