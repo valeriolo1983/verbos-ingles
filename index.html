@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verbos irregulares en inglés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff7e8; --ink:#2b2350; --muted:#6f6894; --card:#ffffff; --line:#eee4d2;
+  --inf:#ff7a45; --inf-soft:#ffe6da;
+  --past:#2f86f6; --past-soft:#dcebff;
+  --pp:#8b5cf6; --pp-soft:#ece3ff;
+  --ok:#1fb36b; --ok-soft:#d8f6e7; --bad:#f43f5e; --bad-soft:#ffe1e7; --sun:#ffc23c;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Fredoka,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(circle at 10% 0%,#ffe9c2 0,transparent 40%),radial-gradient(circle at 100% 100%,#e5f0ff 0,transparent 45%);}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit}
+.wrap{max-width:860px;margin:0 auto;padding:18px 16px 40px}
+.screen{display:none;animation:pop .25s ease}
+.screen.on{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* header */
+.hero{text-align:center;padding:10px 0 6px}
+.hero h1{font-size:clamp(30px,6vw,46px);margin:0;line-height:1.05;font-weight:700}
+.hero h1 span{display:inline-block}
+.hero p{margin:8px 0 0;color:var(--muted);font-size:18px}
+.legend{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0 4px}
+.tag{padding:6px 12px;border-radius:999px;font-weight:600;font-size:15px}
+.t-inf{background:var(--inf-soft);color:#c94d1c}
+.t-past{background:var(--past-soft);color:#1b5fbd}
+.t-pp{background:var(--pp-soft);color:#6435d0}
+
+/* settings */
+.panel{background:var(--card);border-radius:22px;padding:16px 18px;box-shadow:0 4px 0 var(--line);margin:16px 0}
+.panel h2{margin:0 0 10px;font-size:19px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+.row .lbl{min-width:120px;font-weight:600;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{background:#f4efe4;padding:8px 13px;border-radius:12px;font-size:15px;font-weight:500}
+.seg button.sel{background:var(--ink);color:#fff}
+
+/* modes */
+.sect{font-size:20px;margin:20px 4px 10px}
+.big-mic{font-size:28px;padding:20px 40px;animation:bounce 1s infinite alternate}
+@keyframes bounce{to{transform:scale(1.06)}}
+.players{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 4px 10px}
+.pl{background:#fff;padding:9px 16px;border-radius:999px;font-weight:600;font-size:16px;box-shadow:0 3px 0 var(--line)}
+.pl.sel{background:var(--ink);color:#fff;box-shadow:0 3px 0 #120d2b}
+.pl-edit{background:none;font-size:18px;padding:6px}
+.pl-ask{font-weight:600;color:var(--bad);margin-right:4px}
+.pl-yes{background:var(--bad);color:#fff;box-shadow:0 3px 0 #b9203d}
+.pl-in{font-family:inherit;font-size:16px;padding:8px 12px;border-radius:999px;border:3px solid var(--ink);width:150px}
+.unit{background:#fff;border-radius:22px;padding:14px 16px;margin:12px 0;box-shadow:0 4px 0 var(--line)}
+.unit.locked{opacity:.5}
+.unit.review{background:linear-gradient(135deg,#fff7dc,#fff)}
+.unit h3{margin:0;font-size:19px}
+.unit .vs{color:var(--muted);font-size:15px;margin:3px 0 12px}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.step{width:84px;text-align:center;background:none;padding:0}
+.step .c{width:60px;height:60px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:27px;background:#f4efe4;box-shadow:0 4px 0 #e2d8c4}
+.step.done .c{background:var(--ok-soft);box-shadow:0 4px 0 #a8e3c4}
+.step.next .c{background:var(--sun);box-shadow:0 4px 0 #d99a12;animation:bounce 1s infinite alternate}
+.step.lock{cursor:default}.step.lock .c{filter:grayscale(1);opacity:.45}
+.step small{display:block;font-size:12px;margin-top:5px;color:var(--muted);font-weight:600;line-height:1.1}
+.step .st{font-size:12px;min-height:15px;margin-top:2px}
+.step .cnt{font-size:11px;color:var(--muted);font-weight:600}
+.tip{background:#fff4d6;color:#7a5600;border-radius:14px;padding:10px 14px;font-size:17px;margin:14px auto 0;max-width:560px}
+.unlock{font-size:19px;font-weight:600;color:#1b5fbd;min-height:24px;margin:6px 0}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.mode{background:var(--card);border-radius:22px;padding:18px;text-align:left;box-shadow:0 5px 0 var(--line);transition:transform .12s}
+.mode:hover{transform:translateY(-3px)}
+.mode:active{transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.mode .ico{font-size:38px}
+.mode h3{margin:6px 0 4px;font-size:21px}
+.mode p{margin:0;color:var(--muted);font-size:15px;line-height:1.3}
+.mode .best{margin-top:8px;font-size:14px;color:#b07d00;font-weight:600;min-height:18px}
+
+/* game top bar */
+.bar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back{background:#fff;border-radius:14px;padding:9px 14px;font-weight:600;box-shadow:0 3px 0 var(--line)}
+.prog{flex:1;height:14px;background:#efe6d6;border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--sun),#ff8a3c);border-radius:99px;transition:width .3s}
+.score{font-weight:700;font-size:18px;white-space:nowrap}
+
+.stage{background:var(--card);border-radius:28px;padding:24px 18px;box-shadow:0 6px 0 var(--line);text-align:center}
+.ask{color:var(--muted);font-size:19px;margin:0}
+.big{font-size:clamp(42px,10vw,72px);font-weight:700;margin:6px 0 2px;line-height:1.05}
+.big.es{color:var(--ink)}
+.sub{color:var(--muted);font-size:18px;margin:0 0 6px}
+.hint{display:inline-block;background:#fff4d6;color:#8a6200;border-radius:12px;padding:6px 12px;font-size:16px;margin-top:6px}
+
+/* timer */
+.timer{position:relative;width:150px;height:150px;margin:18px auto 6px}
+.timer svg{transform:rotate(-90deg)}
+.timer .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:54px;font-weight:700}
+.timer.urgent .num{color:var(--bad);animation:pulse .5s infinite alternate}
+@keyframes pulse{to{transform:scale(1.12)}}
+.say{font-size:22px;font-weight:600;margin:4px 0 10px}
+
+/* forms cards */
+.forms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 6px}
+.fc{border-radius:20px;padding:12px 6px 14px;transition:transform .15s,box-shadow .15s;border:3px solid transparent}
+.fc small{display:block;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;opacity:.8}
+.fc b{display:block;font-size:clamp(20px,5vw,34px);margin-top:4px;white-space:nowrap;overflow:hidden}
+.choice{white-space:nowrap;overflow:hidden}
+@media (hover:none) and (pointer:coarse){.kbd-hint{display:none}}
+/* phones: the three forms one under the other, so the words stay big */
+@media (max-width:520px){
+  .forms{grid-template-columns:minmax(0,1fr);gap:8px}
+  .fc{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;text-align:left}
+  .fc small{font-size:12px;flex:0 0 auto}
+  .fc b{margin:0;font-size:28px;text-align:right;min-width:0}
+  .fc .mark{top:50%;right:-10px;transform:translateY(-50%);width:30px;height:30px;font-size:17px}
+  .fc b{padding-right:14px}
+  .stage{padding:20px 14px}
+}
+.fc.inf{background:var(--inf-soft);color:#b84413}
+.fc.past{background:var(--past-soft);color:#1857ad}
+.fc.pp{background:var(--pp-soft);color:#5a2ec4}
+.fc.speaking{transform:scale(1.08);box-shadow:0 6px 18px rgba(0,0,0,.12);border-color:currentColor}
+.fc.hidden b{visibility:hidden}
+.fc.hidden{opacity:.55}
+
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.btn{padding:14px 20px;border-radius:18px;font-size:19px;font-weight:600;background:#f1ebdf;box-shadow:0 4px 0 #ddd2bd}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #ddd2bd}
+.btn.go{background:var(--sun);box-shadow:0 4px 0 #d99a12}
+.btn.ok{background:var(--ok);color:#fff;box-shadow:0 4px 0 #13814c}
+.btn.bad{background:var(--bad);color:#fff;box-shadow:0 4px 0 #b9203d}
+.btn.dark{background:var(--ink);color:#fff;box-shadow:0 4px 0 #120d2b}
+.btn.small{font-size:16px;padding:10px 14px}
+
+/* typing */
+.inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 4px;text-align:left}
+.inputs label{font-weight:600;font-size:15px}
+.inputs label.past{color:#1857ad}.inputs label.pp{color:#5a2ec4}
+.inputs input{width:100%;font-family:inherit;font-size:26px;padding:12px 14px;border-radius:16px;border:3px solid #e7dfcf;outline:none;margin-top:4px;background:#fffdf8;color:var(--ink)}
+.inputs input:focus{border-color:var(--ink)}
+.inputs input.right{border-color:var(--ok);background:var(--ok-soft)}
+.inputs input.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fix{font-size:16px;margin-top:4px;min-height:20px;color:var(--bad);font-weight:600}
+
+/* choices */
+.choices{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:18px}
+.choice{background:#f6f1e7;border-radius:18px;padding:18px 8px;font-size:26px;font-weight:600;box-shadow:0 4px 0 #e2d8c4}
+.choice.right{background:var(--ok);color:#fff;box-shadow:0 4px 0 #13814c}
+.choice.wrong{background:var(--bad);color:#fff;box-shadow:0 4px 0 #b9203d}
+.choice:disabled{cursor:default}
+
+.feedback{font-size:24px;font-weight:700;min-height:32px;margin-top:12px}
+.feedback.good{color:var(--ok)}.feedback.bad{color:var(--bad)}
+
+/* list */
+.search{width:100%;font-family:inherit;font-size:19px;padding:12px 16px;border-radius:16px;border:3px solid #e7dfcf;margin-bottom:12px;background:#fff}
+.vlist{display:flex;flex-direction:column;gap:8px}
+.vrow{background:#fff;border-radius:16px;padding:10px 12px;display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr auto;gap:8px;align-items:center;box-shadow:0 3px 0 var(--line)}
+.vrow .es{color:var(--muted);font-size:15px}
+.chip{border-radius:12px;padding:8px 6px;font-weight:600;font-size:17px;text-align:center}
+.chip.inf{background:var(--inf-soft);color:#b84413}.chip.past{background:var(--past-soft);color:#1857ad}.chip.pp{background:var(--pp-soft);color:#5a2ec4}
+.spk{background:#f1ebdf;border-radius:12px;padding:8px 10px;font-size:18px}
+.fam{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;margin-top:3px;font-weight:600}
+.famhead{margin:14px 0 6px;font-weight:700;font-size:18px}
+
+/* end */
+.stars{font-size:64px;letter-spacing:6px;margin:6px 0}
+.endmsg{font-size:26px;font-weight:700;margin:4px 0}
+.missed{margin-top:16px;text-align:left}
+.missed h3{margin:0 0 8px}
+
+.note{color:var(--muted);font-size:14px;text-align:center;margin-top:18px}
+.mic{margin:6px auto 4px;max-width:520px;background:#f4efe4;border-radius:16px;padding:10px 14px;font-weight:600}
+.mic.on{background:#ffe1e7;color:#b9203d;animation:micpulse 1.2s infinite alternate}
+@keyframes micpulse{to{background:#ffd0da}}
+.heard{font-size:22px;color:var(--ink);min-height:28px;margin-top:4px;font-weight:500}
+.big-heard{color:var(--muted);font-size:18px}
+.waves{display:inline-flex;gap:3px;align-items:center;height:22px;vertical-align:middle;margin-right:6px}
+.waves i{display:block;width:5px;border-radius:3px;background:var(--bad);animation:wv .6s infinite alternate}
+.waves i:nth-child(2){animation-delay:.1s}.waves i:nth-child(3){animation-delay:.2s}.waves i:nth-child(4){animation-delay:.3s}.waves i:nth-child(5){animation-delay:.4s}
+@keyframes wv{from{height:5px}to{height:22px}}
+.fc{position:relative;min-width:0}
+.mark{position:absolute;top:-10px;right:-6px;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.mark.y{background:var(--ok)}.mark.n{background:var(--bad)}
+.confetti{position:fixed;top:-20px;font-size:26px;pointer-events:none;animation:fall 1.6s linear forwards;z-index:9}
+@keyframes fall{to{transform:translateY(105vh) rotate(360deg);opacity:.7}}
+
+@media (max-width:560px){
+  .vrow{grid-template-columns:1fr 1fr 1fr auto}
+  .vrow .esc{grid-column:1/-1}
+  .inputs{grid-template-columns:1fr}
+  .choice{font-size:22px}
+  .row .lbl{min-width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<section id="home" class="screen on">
+  <div class="hero">
+    <h1><span>🚀 Irregular</span> <span>Verbs!</span></h1>
+    <p>Aprende los verbos irregulares jugando</p>
+    <div class="legend">
+      <span class="tag t-inf">1 · Infinitive</span>
+      <span class="tag t-past">2 · Past simple</span>
+      <span class="tag t-pp">3 · Past participle</span>
+    </div>
+  </div>
+
+  <h2 class="sect">🗺️ Mi camino</h2>
+  <div class="players" id="players"></div>
+  <div id="path"></div>
+
+  <h2 class="sect" style="margin-top:30px">🎮 Juego libre</h2>
+  <p class="note" style="text-align:left;margin:-4px 4px 10px">Para practicar lo que queráis, con los ajustes de abajo.</p>
+  <h2 class="sect" style="font-size:17px">🎤 Con micrófono</h2>
+  <div class="modes">
+    <button class="mode mic-mode" data-start="speak" data-variant="es">
+      <div class="ico">🇪🇸➜🇬🇧</div>
+      <h3>Del español</h3>
+      <p>Ves «ir» y dices las 3 formas: <b>go, went, gone</b>.</p>
+      <div class="best" id="best-speak-es"></div>
+    </button>
+    <button class="mode mic-mode" data-start="speak" data-variant="en">
+      <div class="ico">👂</div>
+      <h3>Escucha y sigue</h3>
+      <p>Claude dice «Go!» y tú sigues con <b>went, gone</b>.</p>
+      <div class="best" id="best-speak-en"></div>
+    </button>
+    <button class="mode mic-mode" data-start="speak" data-variant="q">
+      <div class="ico">❓</div>
+      <h3>Pregunta rápida</h3>
+      <p>«What's the past participle of <i>be</i>?» y tú dices <b>been</b>.</p>
+      <div class="best" id="best-speak-q"></div>
+    </button>
+  </div>
+  <p class="note" id="micNote"></p>
+  <h2 class="sect" style="font-size:17px">✏️ Sin micrófono</h2>
+  <div class="modes">
+    <button class="mode" data-start="type">
+      <div class="ico">✍️</div>
+      <h3>Escríbelo</h3>
+      <p>Escribe el past simple y el participle.</p>
+      <div class="best" id="best-type"></div>
+    </button>
+    <button class="mode" data-start="choice">
+      <div class="ico">🎯</div>
+      <h3>¿Cuál es?</h3>
+      <p>Elige la forma correcta entre 4 opciones.</p>
+      <div class="best" id="best-choice"></div>
+    </button>
+    <button class="mode" data-start="list">
+      <div class="ico">📚</div>
+      <h3>La lista</h3>
+      <p>Todos los verbos por familias. Toca uno para escucharlo.</p>
+      <div class="best"></div>
+    </button>
+  </div>
+
+  <div class="panel">
+    <h2>⚙️ Ajustes</h2>
+    <p class="note" style="text-align:left;margin:0 0 6px">«Verbos», «Familia» y «Preguntas» solo cuentan en el juego libre: el camino elige sus verbos.</p>
+    <div class="row"><span class="lbl">Verbos</span>
+      <div class="seg" data-set="level">
+        <button data-v="1">📒 Los de clase (30)</button>
+        <button data-v="3">📚 Todos (69)</button>
+      </div></div>
+    <div class="row"><span class="lbl">Familia</span>
+      <div class="seg" data-set="fam">
+        <button data-v="all">Todas</button>
+        <button data-v="AAA">cut-cut-cut</button>
+        <button data-v="ABB">buy-bought-bought</button>
+        <button data-v="ABC">go-went-gone</button>
+      </div></div>
+    <div class="row"><span class="lbl">Preguntas</span>
+      <div class="seg" data-set="n">
+        <button data-v="5">5</button><button data-v="10">10</button><button data-v="15">15</button><button data-v="20">20</button>
+      </div></div>
+    <div class="row"><span class="lbl">Tiempo para pensar</span>
+      <div class="seg" data-set="secs">
+        <button data-v="3">3 s</button><button data-v="5">5 s</button><button data-v="8">8 s</button><button data-v="12">12 s</button>
+      </div></div>
+    <div class="row"><span class="lbl">Voz</span>
+      <div class="seg" data-set="accent">
+        <button data-v="c:buttery" class="cvoice" hidden>🎙️ Claude 1</button><button data-v="c:airy" class="cvoice" hidden>🎙️ Claude 2</button><button data-v="c:glassy" class="cvoice" hidden>🎙️ Claude 3</button><button data-v="c:rounded" class="cvoice" hidden>🎙️ Claude 4</button>
+        <button data-v="pk:ava" class="pkvoice" data-pack="ava" hidden>🇺🇸 Ava</button><button data-v="pk:sonia" class="pkvoice" data-pack="sonia" hidden>🇬🇧 Sonia</button><button data-v="en-GB" class="pkvoice" data-pack="gb" hidden>🇬🇧 Maisie</button><button data-v="en-US" class="pkvoice" data-pack="us" hidden>🇺🇸 Ana</button>
+      </div></div>
+    <div class="row"><span class="lbl">Velocidad</span>
+      <div class="seg" data-set="rate">
+        <button data-v="0.7">🐢 lenta</button><button data-v="0.9">🐇 normal</button>
+      </div></div>
+    <div class="row" id="row-mic" hidden><span class="lbl">Micrófono</span>
+      <div class="seg" data-set="mic">
+        <button data-v="on">🎤 sí, que me escuche</button><button data-v="off">no, me corrijo yo</button>
+      </div></div>
+    <div class="row"><span class="lbl">Sonidos</span>
+      <div class="seg" data-set="sfx">
+        <button data-v="on">🔔 sí</button><button data-v="off">🔕 no</button>
+      </div></div>
+    <div class="row"><button class="btn small" id="testVoice">🔊 Probar la voz: go · went · gone</button></div>
+  </div>
+  <p class="note" id="voiceNote"></p>
+</section>
+
+<!-- SPEAK -->
+<section id="speak" class="screen">
+  <div class="bar"><button class="back" data-home>← Menú</button><div class="prog"><i id="sp-prog"></i></div><div class="score" id="sp-score">⭐ 0</div></div>
+  <div class="stage">
+    <p class="ask" id="sp-ask">¿Cómo se dice en inglés?</p>
+    <div class="big es" id="sp-word">ir</div>
+    <p class="sub" id="sp-sub"></p>
+    <div class="hint" id="sp-hint">Di las 3 formas en voz alta</div>
+
+    <div id="sp-learn" style="display:none">
+      <div class="tip" id="sp-tip"></div>
+      <div class="forms">
+        <div class="fc inf"><small>infinitive</small><b id="sp-l0"></b></div>
+        <div class="fc past"><small>past simple</small><b id="sp-l1"></b></div>
+        <div class="fc pp"><small>participle</small><b id="sp-l2"></b></div>
+      </div>
+    </div>
+    <div id="sp-prompt" style="display:none">
+      <div class="btns" style="margin-top:22px">
+        <button class="btn go big-mic" id="sp-go">🎤 ¡Ahora tú!</button></div><div class="note kbd-hint" style="margin-top:6px">o pulsa la barra espaciadora
+      </div>
+      <div class="btns"><button class="btn small" id="sp-rep">🔊 Repetir la pregunta</button></div>
+    </div>
+    <div id="sp-think">
+      <div class="timer" id="sp-timer">
+        <svg width="150" height="150"><circle cx="75" cy="75" r="64" stroke="#f0e7d6" stroke-width="14" fill="none"/>
+          <circle id="sp-ring" cx="75" cy="75" r="64" stroke="#ffc23c" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="402.1" stroke-dashoffset="0"/></svg>
+        <div class="num" id="sp-num">5</div>
+      </div>
+      <div class="say">🎤 ¡Dilo ahora!</div>
+      <div class="mic" id="sp-mic" style="display:none"><span id="sp-mic-t">🎤 Te escucho…</span><div class="heard" id="sp-heard"></div></div>
+      <div class="btns"><button class="btn small" id="sp-skip">Ya lo he dicho → ver</button></div>
+    </div>
+
+    <div id="sp-reveal" style="display:none">
+      <div class="forms">
+        <div class="fc inf"><small>infinitive</small><b id="sp-f0"></b></div>
+        <div class="fc past"><small>past simple</small><b id="sp-f1"></b></div>
+        <div class="fc pp"><small>participle</small><b id="sp-f2"></b></div>
+      </div>
+      <div class="feedback" id="sp-result"></div>
+      <div class="heard big-heard" id="sp-heard2"></div>
+      <div class="btns"><button class="btn small" id="sp-again">🔊 Otra vez</button></div>
+      <div id="sp-self">
+        <p class="ask" style="margin-top:14px">¿Lo has dicho bien?</p>
+        <div class="btns">
+          <button class="btn ok" id="sp-yes">✅ ¡Sí!</button>
+          <button class="btn bad" id="sp-no">🔁 No, repetir luego</button>
+        </div>
+      </div>
+      <div id="sp-auto" style="display:none">
+        <div class="btns">
+          <button class="btn go" id="sp-next">Siguiente →</button>
+          <button class="btn small" id="sp-retry">🎤 Probar otra vez</button>
+          <button class="btn small" id="sp-override">🙋 ¡Lo dije bien! No me entendió</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TYPE -->
+<section id="type" class="screen">
+  <div class="bar"><button class="back" data-home>← Menú</button><div class="prog"><i id="ty-prog"></i></div><div class="score" id="ty-score">⭐ 0</div></div>
+  <div class="stage">
+    <p class="ask">Escribe el past simple y el participle de…</p>
+    <div class="big" style="color:var(--inf)" id="ty-word">go</div>
+    <p class="sub" id="ty-es">(ir)</p>
+    <form id="ty-form" autocomplete="off">
+      <div class="inputs">
+        <div><label class="past" for="ty-a">2 · Past simple</label><input id="ty-a" autocapitalize="off" spellcheck="false"><div class="fix" id="ty-fa"></div></div>
+        <div><label class="pp" for="ty-b">3 · Past participle</label><input id="ty-b" autocapitalize="off" spellcheck="false"><div class="fix" id="ty-fb"></div></div>
+      </div>
+      <div class="feedback" id="ty-fb-msg"></div>
+      <div class="btns">
+        <button class="btn go" type="submit" id="ty-check">Comprobar ✔</button>
+        <button class="btn small" type="button" id="ty-hear">🔊 Escuchar</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- CHOICE -->
+<section id="choice" class="screen">
+  <div class="bar"><button class="back" data-home>← Menú</button><div class="prog"><i id="ch-prog"></i></div><div class="score" id="ch-score">⭐ 0</div></div>
+  <div class="stage">
+    <p class="ask" id="ch-ask"></p>
+    <div class="big" style="color:var(--inf)" id="ch-word"></div>
+    <p class="sub" id="ch-es"></p>
+    <div class="choices" id="ch-opts"></div>
+    <div class="feedback" id="ch-fb"></div>
+    <div class="forms" id="ch-forms" style="display:none">
+      <div class="fc inf"><small>infinitive</small><b id="ch-f0"></b></div>
+      <div class="fc past"><small>past simple</small><b id="ch-f1"></b></div>
+      <div class="fc pp"><small>participle</small><b id="ch-f2"></b></div>
+    </div>
+    <div class="btns"><button class="btn go" id="ch-next" style="display:none">Siguiente →</button></div>
+  </div>
+</section>
+
+<!-- LIST -->
+<section id="list" class="screen">
+  <div class="bar"><button class="back" data-home>← Menú</button><div style="flex:1"></div></div>
+  <input class="search" id="ls-q" placeholder="🔎 Busca un verbo (en inglés o en español)…">
+  <div id="ls-body"></div>
+</section>
+
+<!-- END -->
+<section id="end" class="screen">
+  <div class="stage">
+    <div class="stars" id="en-stars">⭐⭐⭐</div>
+    <div class="endmsg" id="en-msg">¡Genial!</div>
+    <div class="unlock" id="en-unlock"></div>
+    <p class="sub" id="en-score"></p>
+    <div class="missed" id="en-missed"></div>
+    <div class="btns">
+      <button class="btn go" id="en-path" style="display:none">🗺️ Seguir el camino</button>
+      <button class="btn go" id="en-again">🔁 Jugar otra vez</button>
+      <button class="btn dark" data-home>🏠 Menú</button>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ---------- DATA: [infinitive, past, participle, español, nivel] ---------- */
+const VERBS = [
+ ["be","was / were","been","ser, estar",1],
+ ["have","had","had","tener",1],
+ ["do","did","done","hacer (los deberes)",1],
+ ["go","went","gone","ir",1],
+ ["say","said","said","decir",1],
+ ["make","made","made","hacer, fabricar (una tarta)",1],
+ ["see","saw","seen","ver",1],
+ ["come","came","come","venir",1],
+ ["eat","ate","eaten","comer",1],
+ ["drink","drank","drunk","beber",1],
+ ["give","gave","given","dar",1],
+ ["take","took","taken","coger, llevar",1],
+ ["get","got","got","conseguir, recibir",1],
+ ["buy","bought","bought","comprar",1],
+ ["run","ran","run","correr",1],
+ ["swim","swam","swum","nadar",1],
+ ["sing","sang","sung","cantar",1],
+ ["write","wrote","written","escribir",1],
+ ["read","read","read","leer",1],
+ ["sleep","slept","slept","dormir",1],
+ ["put","put","put","poner",1],
+ ["cut","cut","cut","cortar",1],
+ ["sit","sat","sat","sentarse",1],
+ ["know","knew","known","saber, conocer",1],
+ ["find","found","found","encontrar",1],
+ ["think","thought","thought","pensar",2],
+ ["tell","told","told","contar, decir (a alguien)",2],
+ ["speak","spoke","spoken","hablar",2],
+ ["fly","flew","flown","volar",2],
+ ["draw","drew","drawn","dibujar",2],
+ ["ride","rode","ridden","montar (en bici, a caballo)",2],
+ ["break","broke","broken","romper",2],
+ ["win","won","won","ganar",2],
+ ["lose","lost","lost","perder",2],
+ ["teach","taught","taught","enseñar",2],
+ ["bring","brought","brought","traer",2],
+ ["catch","caught","caught","atrapar, pillar",2],
+ ["fall","fell","fallen","caerse",2],
+ ["forget","forgot","forgotten","olvidar",2],
+ ["hear","heard","heard","oír",2],
+ ["meet","met","met","conocer (a alguien), quedar",2],
+ ["feel","felt","felt","sentir",2],
+ ["leave","left","left","irse, dejar",2],
+ ["begin","began","begun","empezar",2],
+ ["wear","wore","worn","llevar puesto (ropa)",2],
+ ["keep","kept","kept","guardar, mantener",3],
+ ["hold","held","held","sujetar, agarrar",3],
+ ["stand","stood","stood","estar de pie",3],
+ ["let","let","let","dejar, permitir",3],
+ ["mean","meant","meant","significar",3],
+ ["pay","paid","paid","pagar",3],
+ ["drive","drove","driven","conducir",3],
+ ["choose","chose","chosen","elegir",3],
+ ["sell","sold","sold","vender",3],
+ ["send","sent","sent","enviar",3],
+ ["spend","spent","spent","gastar, pasar (tiempo)",3],
+ ["build","built","built","construir",3],
+ ["hit","hit","hit","golpear",3],
+ ["grow","grew","grown","crecer",3],
+ ["throw","threw","thrown","lanzar, tirar",3],
+ ["understand","understood","understood","entender",3],
+ ["wake","woke","woken","despertarse",3],
+ ["become","became","become","convertirse en",3],
+ ["shut","shut","shut","cerrar",3],
+ ["burn","burnt","burnt","quemar",1],
+ ["dig","dug","dug","cavar",1],
+ ["feed","fed","fed","dar de comer",1],
+ ["hang","hung","hung","colgar",1],
+ ["learn","learnt","learnt","aprender",1]
+].map(a=>({inf:a[0],past:a[1],pp:a[2],es:a[3],lvl:a[4]}));
+// the 30 verbs they have studied in class
+const CLASS=["be","begin","build","burn","buy","catch","come","cut","dig","do","draw","drink","drive","eat","fall","feed","feel","find","fly","forget","get","give","go","grow","hang","have","keep","know","learn","let"];
+VERBS.forEach(v=>v.lvl=CLASS.includes(v.inf)?1:3);
+// other correct spellings (American English) that are also accepted
+const ALT={burn:{past:["burned"],pp:["burned"]},learn:{past:["learned"],pp:["learned"]}};
+const altOf=(v,k)=>(ALT[v.inf]&&ALT[v.inf][k])||[];
+
+// how to pronounce (for the voice) when spelling misleads
+// how the voice must say words whose spelling misleads it
+const SAY = {"read":{past:"red",pp:"red"},"was / were":"was, were","ate":"eight"};
+
+function family(v){
+  if(v.inf===v.past && v.past===v.pp) return "AAA";
+  if(v.past===v.pp) return "ABB";
+  if(v.inf===v.pp) return "ABA";
+  return "ABC";
+}
+const FAM = {
+  AAA:{name:"🟢 Las tres iguales",ex:"cut · cut · cut",bg:"#d8f6e7",fg:"#0f7a47"},
+  ABB:{name:"🔵 Past = participle",ex:"buy · bought · bought",bg:"#dcebff",fg:"#1857ad"},
+  ABA:{name:"🟠 Infinitive = participle",ex:"come · came · come",bg:"#ffe6da",fg:"#b84413"},
+  ABC:{name:"🟣 Las tres distintas",ex:"go · went · gone",bg:"#ece3ff",fg:"#5a2ec4"}
+};
+
+/* ---------- LEARNING PATH ---------- */
+const UNITS=[{name:"Los 30 verbos de clase",icon:"📒",verbs:CLASS}];
+const STEPS=[{id:"learn",ico:"📖",name:"Aprende"},{id:"choice",ico:"🎯",name:"Elige"},{id:"toEs",ico:"🤔",name:"¿Qué significa?"},{id:"toEn",ico:"🔤",name:"Tradúcelo"},{id:"en",ico:"👂",name:"Escucha y sigue"},{id:"q",ico:"❓",name:"Pregunta rápida"},{id:"es",ico:"🇪🇸",name:"Del español"},{id:"mix",ico:"🏆",name:"Desafío final"}];
+const REVIEW_STEPS=[{id:"q",ico:"❓",name:"Pregunta rápida"},{id:"es",ico:"🇪🇸",name:"Del español"}];
+const V_BY=Object.fromEntries(VERBS.map(v=>[v.inf,v]));
+function unitVerbs(u){
+  const U=UNITS[u];
+  if(!U.review)return U.verbs.map(i=>V_BY[i]);
+  const all=[];UNITS.slice(0,U.upTo).forEach(x=>{if(!x.review)all.push(...x.verbs)});return all.map(i=>V_BY[i]);
+}
+function unitSteps(u){return UNITS[u].review?REVIEW_STEPS:STEPS;}
+function unitTitle(u){const U=UNITS[u];if(!U.review)return U.icon+" "+U.name;return U.final?"🏆 Gran desafío final":"⭐ Repaso";}
+
+const store = {
+  get(k,d){try{const v=localStorage.getItem("irv_"+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("irv_"+k,JSON.stringify(v))}catch(e){}},
+  del(k){try{localStorage.removeItem("irv_"+k)}catch(e){}}
+};
+const S = Object.assign({level:"1",fam:"all",n:"10",secs:"5",from:"es",accent:"c:buttery",rate:"0.9",sfx:"on",mic:"on"}, store.get("settings",{}));
+document.querySelectorAll(".seg[data-set]").forEach(seg=>{
+  const key=seg.dataset.set;
+  const paint=()=>seg.querySelectorAll("button").forEach(b=>b.classList.toggle("sel",b.dataset.v===S[key]));
+  seg.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S[key]=b.dataset.v;store.set("settings",S);paint();if(key==="accent"||key==="rate")loadAudio(accKey()).then(()=>speakForms({inf:"go",past:"went",pp:"gone"}));if(key==="accent")applyCaps();});
+  paint();
+});
+
+/* Spanish meanings: what is shown and what is accepted when they answer in Spanish */
+const ES_SYN={be:["ser","estar"],fall:["caer","caerse"],catch:["coger","atrapar","pillar","agarrar"],get:["conseguir","recibir","obtener","coger"],
+  do:["hacer"],drive:["conducir","manejar"],burn:["quemar","quemarse"],feel:["sentir","sentirse"],keep:["guardar","mantener","quedarse"],
+  begin:["empezar","comenzar"],let:["dejar","permitir"],know:["saber","conocer"],grow:["crecer","cultivar"],feed:["dar de comer","alimentar"],
+  hang:["colgar"],give:["dar","regalar"],buy:["comprar"],build:["construir"],find:["encontrar","hallar"],forget:["olvidar","olvidarse"],learn:["aprender"],
+  dig:["cavar","excavar"],draw:["dibujar"],drink:["beber","tomar"],eat:["comer"],fly:["volar"],come:["venir"],cut:["cortar"],go:["ir","irse"],have:["tener","haber"]};
+const esMain=v=>v.es.split(",")[0].replace(/\(.*?\)/g,"").trim();
+const deacc=t=>t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zñ ]+/g," ").replace(/\s+/g," ").trim();
+function esOptions(v){
+  const o=v.es.split(",").map(x=>x.replace(/\(.*?\)/g,"").trim()).concat(ES_SYN[v.inf]||[]);
+  return [...new Set(o.map(deacc).filter(Boolean))];
+}
+function evaluateEs(v,text){
+  const t=" "+deacc(text)+" ";const words=t.trim().split(" ").filter(Boolean);
+  const mine=esOptions(v);
+  // meanings of the OTHER verbs: saying one of those is not a near-miss, it is another verb
+  const others=new Set();VERBS.forEach(w=>{if(w!==v)esOptions(w).forEach(o=>{if(!mine.includes(o))others.add(o)})});
+  for(const o of others){ if(o.includes(" ")&&t.includes(" "+o+" ")&&mine.some(m=>o.includes(m)))return{found:{},all:false,any:true}; }
+  const ok=mine.some(o=>{
+    if(t.includes(" "+o+" "))return true;
+    const base=o.replace(/se$/,"");
+    if(o.includes(" "))return false;
+    return words.some(w=>{const wb=w.replace(/se$/,"");
+      if(wb===base)return true;
+      return base.length>=5&&!others.has(w)&&!others.has(wb)&&!others.has(wb+"r")&&lev(wb,base)<=1;});
+  });
+  return{found:{},all:ok,any:words.length>0};
+}
+
+/* tips for learning each verb */
+function verbTip(v){
+  const special={be:"be tiene dos pasados: was (I, he, she, it) y were (you, we, they).",
+    learn:"learn · learnt · learnt (también se dice learned).",burn:"burn · burnt · burnt (también se dice burned).",
+    get:"get · got · got (en inglés americano el participle es gotten).",come:"¡Truco! El participle es igual que el infinitivo: come · came · come.",
+    fall:"¡Ojo! fall · fell · fallen: el participle acaba en -en.",forget:"forget · forgot · forgotten: el participle acaba en -en.",
+    drive:"drive · drove · driven: el participle acaba en -en.",eat:"eat · ate · eaten: el pasado suena «eit».",give:"give · gave · given: el participle acaba en -en.",
+    go:"¡El más raro! go · went · gone.",do:"do · did · done.",hang:"hang · hung · hung: past y participle iguales."};
+  if(special[v.inf])return special[v.inf];
+  const c=w=>w.replace(/[aeiou]/g,"");
+  if(c(v.inf)===c(v.past)&&c(v.past)===c(v.pp)&&v.inf!==v.past&&v.past!==v.pp)return "Solo cambia la vocal: "+v.inf+" · "+v.past+" · "+v.pp+" (i → a → u).";
+  if(/ought$|aught$/.test(v.past))return "Past y participle iguales, acaban en «-ought / -aught»: "+v.past+".";
+  if(/ew$/.test(v.past)&&/n$/.test(v.pp))return "Past en -ew y participle en -n: "+v.inf+" · "+v.past+" · "+v.pp+".";
+  const f=family(v);
+  if(f==="AAA")return "¡Las tres formas son iguales! "+v.inf+" · "+v.inf+" · "+v.inf+".";
+  if(f==="ABB")return "El past y el participle son la misma palabra: "+v.past+".";
+  if(f==="ABA")return "El participle es igual que el infinitivo.";
+  return "Las tres formas son distintas: ¡a memorizarlas!";
+}
+
+/* ---------- PLAYERS & PROGRESS ---------- */
+// players have a fixed id (their progress is saved under it) and a name
+let PLAYERS=store.get("players2",null);
+if(!PLAYERS){PLAYERS=store.get("players",["Jugador 1","Jugador 2","Jugador 3"]).map((name,id)=>({id,name}));store.set("players2",PLAYERS);}
+let PLAYER=store.get("player2",store.get("player",0));
+if(!PLAYERS.some(p=>p.id===PLAYER))PLAYER=PLAYERS.length?PLAYERS[0].id:0;
+let editing=null, adding=false, deleting=false;
+const progKey=()=>"prog4_"+PLAYER;
+const getProg=()=>store.get(progKey(),{});
+function starsOf(u,s){return getProg()[u+"_"+s]||0;}
+function stepOpen(u,s){
+  if(u===0&&s===0)return true;
+  if(s>0)return starsOf(u,s-1)>=2;
+  const pu=u-1;return starsOf(pu,unitSteps(pu).length-1)>=2;
+}
+function savePlayers(){store.set("players2",PLAYERS);store.set("player2",PLAYER);}
+function nameInput(value,onSave){
+  const inp=document.createElement("input");inp.className="pl-in";inp.value=value;inp.maxLength=16;inp.placeholder="Nombre";
+  let done=false;const save=()=>{if(done)return;done=true;onSave(inp.value.trim());};
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter")save();if(e.key==="Escape"){done=true;editing=null;adding=false;renderPlayers();}});
+  inp.addEventListener("blur",save);setTimeout(()=>inp.focus(),0);return inp;
+}
+function removePlayer(id){
+  ["prog4_","miss_"].forEach(k=>store.del(k+id));
+  STEPS.forEach(st=>store.del("seen_"+id+"_"+st.id));
+  PLAYERS=PLAYERS.filter(p=>p.id!==id);
+  if(!PLAYERS.length)PLAYERS=[{id:Date.now()%100000,name:"Jugador 1"}];
+  PLAYER=PLAYERS[0].id;savePlayers();
+}
+function renderPlayers(){
+  const box=$("players");box.innerHTML="";
+  const cur=PLAYERS.find(p=>p.id===PLAYER);
+  if(deleting&&cur){
+    const m=document.createElement("span");m.className="pl-ask";m.textContent="¿Borrar a "+cur.name+" y todo su progreso?";
+    const y=document.createElement("button");y.className="pl pl-yes";y.textContent="🗑️ Sí, borrar";
+    y.onclick=()=>{deleting=false;removePlayer(cur.id);renderPlayers();renderPath();};
+    const n=document.createElement("button");n.className="pl";n.textContent="No";
+    n.onclick=()=>{deleting=false;renderPlayers();};
+    box.append(m,y,n);return;
+  }
+  PLAYERS.forEach(p=>{
+    if(editing===p.id){
+      box.appendChild(nameInput(p.name,v=>{p.name=v||p.name;editing=null;savePlayers();renderPlayers();}));return;
+    }
+    const b=document.createElement("button");b.className="pl"+(p.id===PLAYER?" sel":"");b.textContent="🧒 "+p.name;
+    b.onclick=()=>{PLAYER=p.id;savePlayers();renderPlayers();renderPath();};
+    box.appendChild(b);
+  });
+  if(adding){
+    box.appendChild(nameInput("",v=>{adding=false;if(v){const id=Math.max(-1,...PLAYERS.map(p=>p.id))+1;PLAYERS.push({id,name:v});PLAYER=id;savePlayers();}renderPlayers();renderPath();}));
+  }else{
+    const add=document.createElement("button");add.className="pl-edit";add.title="Añadir jugador";add.textContent="➕";
+    add.onclick=()=>{adding=true;renderPlayers();};box.appendChild(add);
+  }
+  const e=document.createElement("button");e.className="pl-edit";e.title="Cambiar el nombre";e.textContent="✏️";
+  e.onclick=()=>{editing=PLAYER;renderPlayers();};box.appendChild(e);
+  const d=document.createElement("button");d.className="pl-edit";d.title="Borrar este jugador";d.textContent="🗑️";
+  d.onclick=()=>{deleting=true;renderPlayers();};box.appendChild(d);
+}
+function renderPath(){
+  const box=$("path");box.innerHTML="";
+  let nextFound=false;
+  UNITS.forEach((U,u)=>{
+    const steps=unitSteps(u);
+    const open0=stepOpen(u,0);
+    const d=document.createElement("div");d.className="unit"+(open0?"":" locked")+(U.review?" review":"");
+    const vs=U.review?(U.final?"Todos los verbos del camino":"Todos los verbos que ya has aprendido"):unitVerbs(u).map(v=>v.inf).join(" · ");
+    d.innerHTML=`<h3>${unitTitle(u)}</h3><div class="vs">${vs}</div>`;
+    const row=document.createElement("div");row.className="steps";
+    steps.forEach((st,s)=>{
+      const open=stepOpen(u,s),stars=starsOf(u,s);
+      const b=document.createElement("button");
+      let cls="step";if(!open)cls+=" lock";else if(stars>=2)cls+=" done";else if(!nextFound){cls+=" next";nextFound=true;}
+      b.className=cls;
+      const seen=seenOf(st.id).length, tot=unitVerbs(u).length;
+      b.innerHTML=`<div class="c">${open?st.ico:"🔒"}</div><small>${st.name}</small><div class="st">${stars?"⭐".repeat(stars):""}</div>${open&&seen?`<div class="cnt">${Math.min(seen,tot)}/${tot}</div>`:""}`;
+      if(open)b.onclick=()=>startStep(u,s);
+      row.appendChild(b);
+    });
+    d.appendChild(row);box.appendChild(d);
+  });
+}
+// verbs already practised in each step (so every round brings new ones until all 30 are covered)
+const seenKey=st=>"seen_"+PLAYER+"_"+st;
+const seenOf=st=>store.get(seenKey(st),[]);
+function noteSeen(v){ if(!G||!G.path)return; const st=G.pathStep; const a=seenOf(st); if(!a.includes(v.inf)){a.push(v.inf);store.set(seenKey(st),a);} }
+// verbs a child gets wrong come back more often
+const missKey=()=>"miss_"+PLAYER;
+function noteResult(v,ok){const m=store.get(missKey(),{});m[v.inf]=Math.max(0,(m[v.inf]||0)+(ok?-1:2));store.set(missKey(),m);}
+function pickWeighted(list,n){
+  const m=store.get(missKey(),{});const pool=list.slice();const outp=[];
+  while(outp.length<n&&pool.length){
+    const w=pool.map(v=>1+3*(m[v.inf]||0));let r=Math.random()*w.reduce((a,b)=>a+b,0);
+    let i=0;while(r>w[i]){r-=w[i];i++;}
+    outp.push(pool.splice(Math.min(i,pool.length-1),1)[0]);
+  }
+  return outp;
+}
+function noRepeats(d){for(let t=0;t<20;t++){let ok=true;for(let i=1;i<d.length;i++)if(d[i]===d[i-1]){ok=false;const j=Math.floor(Math.random()*d.length);[d[i],d[j]]=[d[j],d[i]];}if(ok)break;}return d.filter((v,i,a)=>i===0||v!==a[i-1]);}
+function startStep(u,s){
+  const st=unitSteps(u)[s].id, vs=unitVerbs(u);
+  const n=st==="mix"?20:10;
+  // first the verbs not yet practised in this step, then the rest (the ones they miss come more often)
+  const seen=seenOf(st);
+  const fresh=shuffle(vs.filter(v=>!seen.includes(v.inf))).slice(0,st==="learn"?n:Math.ceil(n/2));
+  const rest=pickWeighted(vs.filter(v=>!fresh.includes(v)),n-fresh.length);
+  let d=noRepeats(shuffle([...fresh,...rest]));
+  const path={u,s};
+  if(st==="choice")startGame("choice",null,{deck:d,path,step:st});
+  else startGame("speak",st,{deck:d,path,step:st});
+}
+
+/* ---------- HELPERS ---------- */
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function pool(){
+  let p=VERBS.filter(v=>v.lvl<=+S.level);
+  if(S.fam!=="all"){
+    const want=S.fam==="ABC"?["ABC","ABA"]:[S.fam];
+    const f=p.filter(v=>want.includes(family(v)));
+    if(f.length>=4) p=f; else p=VERBS.filter(v=>want.includes(family(v)));
+  }
+  return p;
+}
+function deck(){const p=shuffle(pool());const n=+S.n;const out=[];while(out.length<n){out.push(...shuffle(p));}return out.slice(0,n).filter((v,i,a)=>i===0||v!==a[i-1]);}
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));window.scrollTo(0,0);}
+document.querySelectorAll("[data-home]").forEach(b=>b.addEventListener("click",goHome));
+function goHome(){phase="idle";stopMic();stopAll();renderBest();renderPath();show("home");}
+
+/* ---------- SOUND EFFECTS ---------- */
+let AC=null;
+function beep(freq,dur,type,vol){
+  if(S.sfx!=="on")return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    const o=AC.createOscillator(),g=AC.createGain();o.type=type||"sine";o.frequency.value=freq;
+    g.gain.setValueAtTime(vol||.15,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+    o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}catch(e){}
+}
+const sfxGood=()=>{beep(660,.12);setTimeout(()=>beep(880,.18),110)};
+const sfxBad=()=>{beep(220,.25,"triangle",.2)};
+const sfxTick=()=>beep(520,.08,"square",.06);
+const sfxGo=()=>beep(990,.25,"sine",.18);
+
+/* ---------- VOICE ---------- */
+const synth=window.speechSynthesis||null;
+let voices=[];
+function loadVoices(){try{voices=synth?synth.getVoices():[]}catch(e){voices=[]}
+  const en=voices.filter(v=>/^en/i.test(v.lang));
+  $("voiceNote").textContent = !synth ? "⚠️ Este navegador no puede leer en voz alta. Prueba con Chrome, Edge o Safari." :
+    (voices.length && !en.length ? "⚠️ No he encontrado una voz en inglés en este dispositivo; se usará la que haya." : "");
+}
+if(synth){loadVoices();try{synth.onvoiceschanged=loadVoices}catch(e){}}
+function pickVoice(lang){
+  if(lang==="es"){const es=voices.filter(v=>/^es/i.test(v.lang));return es.find(v=>/natural|enhanced|premium|google|monica|paulina|elvira/i.test(v.name))||es[0]||null;}
+  const L=S.accent.toLowerCase();
+  const exact=voices.filter(v=>v.lang&&v.lang.replace("_","-").toLowerCase()===L);
+  const any=voices.filter(v=>/^en/i.test(v.lang));
+  const list=exact.length?exact:any;
+  return list.find(v=>/natural|enhanced|premium|google/i.test(v.name))||list[0]||null;
+}
+function sayText(v,key){
+  const s=SAY[v.inf];
+  if(s&&s[key])return s[key];
+  const w=v[key];return typeof SAY[w]==="string"?SAY[w]:w;
+}
+/* recorded natural voices: one pack per English voice + one Spanish pack */
+const AUD={};
+const PACKS=["ava","sonia","gb","us"];            // ava/sonia: adult Microsoft voices; gb/us: the girls (Maisie/Ana)
+const packOf=a=>a==="en-US"?"us":a==="en-GB"?"gb":(a&&a.startsWith("pk:"))?a.slice(3):null;
+function accKey(){
+  const p=packOf(S.accent); if(p&&AUD[p])return p;
+  for(const k of PACKS) if(AUD[k]) return k;
+  return p||"gb";
+}
+async function loadAudio(acc){
+  if(AUD[acc])return;
+  try{const r=await fetch("audio_"+acc+".json");if(r.ok)AUD[acc]=await r.json();}catch(e){}
+}
+(async()=>{ await loadAudio("ava"); await loadAudio("es"); applyCaps(); for(const k of ["sonia","gb","us"]){await loadAudio(k);} applyCaps(); })();
+const wid=w=>w.toLowerCase().replace(/[^a-z]+/g,"_").replace(/^_|_$/g,"");
+function clipId(v,key){ if(v.inf==="read"&&key!=="inf")return "red"; return wid(v[key]); }
+const player=new Audio();
+function playClip(src,rate){
+  return new Promise(res=>{
+    player.onended=player.onerror=()=>res();
+    player.src=src;player.playbackRate=rate||1;
+    try{player.preservesPitch=true}catch(e){}
+    const p=player.play();if(p&&p.catch)p.catch(()=>res());
+  });
+}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+// browser voice, used only for a line that has no recording
+function synthSay(it){
+  return new Promise(res=>{
+    if(!synth){res();return;}
+    try{
+      const u=new SpeechSynthesisUtterance(it.text);
+      const es=it.lang==="es";u.lang=es?"es-ES":"en-GB";
+      const vv=pickVoice(es?"es":"en");if(vv)u.voice=vv;
+      u.rate=it.praise?1:(S.rate==="0.7"?0.8:0.95);
+      u.onend=u.onerror=()=>res();synth.speak(u);
+      setTimeout(res,4000);
+    }catch(e){res();}
+  });
+}
+async function playSeq(items,tok){
+  for(const it of items){
+    if(tok!==speakToken)return;
+    const bank=it.lang==="es"?AUD.es:AUD[accKey()];
+    const src=bank&&it.id&&bank[it.id];
+    if(it.el)it.el.classList.add("speaking");
+    if(src) await playClip(src,it.praise?1:(S.rate==="0.7"?0.85:1.05));
+    else await synthSay(it);
+    if(it.el)it.el.classList.remove("speaking");
+    if(tok!==speakToken)return;
+    await wait(it.praise?250:300);
+  }
+}
+const PRAISE_OK=["p_awesome","p_great","p_super","p_yes","p_fantastic","p_cool","p_well"];
+const PRAISE_BAD=["p_oops","p_try"];
+const PRAISE_TEXT={p_awesome:"Awesome!",p_great:"Great job!",p_super:"Super!",p_yes:"Yeah! That's right!",p_fantastic:"Fantastic!",p_cool:"So cool!",p_well:"Well done!",
+  p_oops:"Oops! Almost!",p_try:"Nice try!",p_ready:"Ready? Go!",p_champion:"Yeah! You are a champion!",p_keep:"Keep practising! You can do it!"};
+const cap=w=>w.charAt(0).toUpperCase()+w.slice(1);
+/* platform capabilities: Claude's voice (tts) and dictation (microphone) */
+let TTS=null, DICT=null, ttsItems=[];
+const useClaude=()=>!!TTS&&S.accent.startsWith("c:");
+function clearSpeaking(){document.querySelectorAll(".speaking").forEach(e=>e.classList.remove("speaking"));}
+function ttsSeq(items,tok,tries){
+  tries=tries||0;
+  ttsItems=items;
+  const r=S.rate==="0.7"?0.85:1.05;
+  const lines=items.map((it,i)=>({text:it.text,id:"l"+i,language:it.lang||"en",rate:it.praise?1.05:r}));
+  return TTS.speak(lines,{voice:S.accent.slice(2)}).catch(e=>{
+    const c=e&&e.code;
+    if((c==="busy"||c==="rate_limited"||c==="upstream_error")&&tries<5&&tok===speakToken)
+      return wait(c==="busy"?350:800).then(()=>tok===speakToken?ttsSeq(items,tok,tries+1):null);
+    if(c==="not_granted"){TTS=null;applyCaps();}
+  });
+}
+function out(items){
+  const tok=++speakToken;
+  try{synth&&synth.cancel()}catch(e){}
+  try{player.pause()}catch(e){}
+  clearSpeaking();
+  if(useClaude())return Promise.race([ttsSeq(items,tok),wait(9000)]);
+  return playSeq(items,tok);   // recordings, or the browser voice for anything not recorded
+}
+// "Learn": the Spanish verb first, then the three English forms
+function speakLearn(v){
+  const els=[...document.querySelectorAll("#sp-learn .fc")];
+  const items=[{id:"es_"+v.inf,text:cap(esMain(v))+"…",lang:"es",praise:true}];
+  ["inf","past","pp"].forEach((k,i)=>items.push({id:clipId(v,k),text:cap(sayText(v,k))+"!",el:els[i]}));
+  return out(items);
+}
+function sayMeaning(v,lead){
+  const it=[];if(lead){const id=pick(PRAISE_BAD);it.push({id,text:PRAISE_TEXT[id],praise:true});}
+  it.push({id:clipId(v,"inf"),text:cap(sayText(v,"inf"))+"!"});
+  it.push({id:"es_"+v.inf,text:cap(esMain(v))+".",lang:"es"});
+  return out(it);
+}
+function sayPraise(id){return out([{id,text:PRAISE_TEXT[id],praise:true}]);}
+function praise(good){return sayPraise(pick(good?PRAISE_OK:PRAISE_BAD));}
+let speakToken=0;
+function speakForms(v,els,only,lead){
+  const keys0=only||["inf","past","pp"];
+  els=els||[];
+  const items=[];
+  if(lead){const id=pick(lead==="ok"?PRAISE_OK:PRAISE_BAD);items.push({id,text:PRAISE_TEXT[id],praise:true});}
+  keys0.forEach(k=>items.push({id:clipId(v,k),text:cap(sayText(v,k))+"!",el:els[["inf","past","pp"].indexOf(k)]}));
+  return out(items);
+}
+function stopAll(keepAudio){
+  speakToken++;try{synth&&synth.cancel()}catch(e){}
+  if(!keepAudio){try{player.pause()}catch(e){} try{TTS&&TTS.active()&&TTS.stop().catch(()=>{})}catch(e){}}
+  clearInterval(timerId);clearSpeaking();
+}
+function applyCaps(){
+  document.querySelectorAll(".cvoice").forEach(b=>b.hidden=!TTS);
+  if(TTS||AUD[accKey()])$("voiceNote").textContent="";
+  const adult=AUD.ava||AUD.sonia;
+  document.querySelectorAll(".pkvoice").forEach(b=>{const k=b.dataset.pack;b.hidden=!AUD[k]||(!!adult&&(k==="gb"||k==="us"));});
+  $("row-mic").hidden=!DICT;
+  if(TTS&&!store.get("settings",{}).accent){S.accent="c:buttery";}
+  const k=accKey(), eff=useClaude()?S.accent:(k==="gb"?"en-GB":k==="us"?"en-US":"pk:"+k);
+  document.querySelectorAll('.seg[data-set="accent"] button').forEach(b=>b.classList.toggle("sel",b.dataset.v===eff));
+}
+// the browser's speech recognition (Chrome, Edge, Safari on iPhone/iPad/Mac, Android), wrapped like Claude's dictation
+function makeWebDict(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return null;
+  let rec=null,on=false,lastErr=null,stopRes=null;const h={};
+  const map={"not-allowed":"not_granted","service-not-allowed":"not_granted","no-speech":"no_speech","aborted":"stopped","audio-capture":"upstream_error","network":"upstream_error","language-not-supported":"unavailable"};
+  return{kind:"web",
+    start(opts){
+      return new Promise((res,rej)=>{
+        try{ if(rec){try{rec.abort()}catch(e){}} }catch(e){}
+        try{
+          rec=new SR();rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=1;
+          rec.lang=(opts&&opts.language==="es")?"es-ES":"en-US";
+          let started=false;
+          rec.onstart=()=>{started=true;on=true;h.state&&h.state({state:"listening"});res();};
+          rec.onresult=e=>{
+            const finals=[];let interim="";
+            for(let i=0;i<e.results.length;i++){
+              const r=e.results[i],t=(r[0]&&r[0].transcript||"").trim();if(!t)continue;
+              if(r.isFinal){const last=finals[finals.length-1];
+                // some phones repeat the whole phrase in each result: keep only the longest
+                if(last&&t.toLowerCase().startsWith(last.toLowerCase()))finals[finals.length-1]=t;else finals.push(t);}
+              else interim=t;
+            }
+            h.text&&h.text({text:(finals.join(" ")+" "+interim).trim()});
+          };
+          rec.onerror=ev=>{lastErr=map[ev.error]||"upstream_error";if(!started)rej({code:lastErr==="no_speech"?"stopped":lastErr});};
+          rec.onend=()=>{on=false;const r=lastErr||"stopped";lastErr=null;h.state&&h.state({state:"idle",reason:r});if(stopRes){stopRes();stopRes=null;}};
+          rec.start();
+        }catch(e){rej({code:"upstream_error"});}
+      });
+    },
+    stop(){return new Promise(r=>{if(!rec||!on){r();return;}stopRes=r;try{rec.stop()}catch(e){r();}setTimeout(r,1500);});},
+    active:()=>on,
+    onText(f){h.text=f},onState(f){h.state=f},onPartial(){},onFinal(){}
+  };
+}
+const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
+(async function loadCaps(){
+  if(inFrame) for(let i=0;i<50&&!(window.claude&&window.claude.use);i++) await wait(200);
+  if(window.claude&&window.claude.use){
+    try{TTS=await claude.use("tts")}catch(e){TTS=null}
+    try{DICT=await claude.use("dictation")}catch(e){DICT=null}
+  }
+  if(!DICT)DICT=makeWebDict();
+  if(TTS){
+    TTS.onLine(({id})=>{clearSpeaking();const it=ttsItems[+String(id||"").slice(1)];if(it&&it.el)it.el.classList.add("speaking");});
+    TTS.onState(({state})=>{if(state==="idle")clearSpeaking();});
+  }
+  if(DICT){
+    if(DICT.kind==="web"){
+      DICT.onText(({text})=>{if(phase!=="think"&&phase!=="stopping")return;heard=text;partial="";if(text)lastSpeech=performance.now();showHeard();if(phase==="think")checkEarly();});
+    }else{
+      DICT.onPartial(({text})=>{if(phase!=="think"&&phase!=="stopping")return;partial=text;if(text)lastSpeech=performance.now();showHeard();if(phase==="think")checkEarly();});
+      DICT.onFinal(({text})=>{if(phase!=="think"&&phase!=="stopping")return;heard+=" "+text;partial="";lastSpeech=performance.now();showHeard();if(phase==="think")checkEarly();});
+    }
+    DICT.onState(({state,reason})=>{
+      if(state==="idle"&&phase==="think"&&reason==="not_granted"){
+        S.mic="off";$("sp-mic").className="mic";$("sp-mic-t").textContent="🚫 Sin permiso para el micrófono: corrígete tú";
+        clearInterval(micWatch);runTimer(+S.secs,revealSpeak);return;
+      }
+      if(state==="idle"&&phase==="think"){
+        // the browser stops by itself after a silence: listen again while it is still their turn
+        if(DICT.kind==="web"&&(reason==="no_speech"||reason==="stopped")){DICT.start({language:G&&G.variant==="toEs"?"es":"en"}).catch(()=>{});return;}
+        $("sp-mic").className="mic";
+        $("sp-mic-t").textContent=reason==="not_granted"?"🚫 El micrófono no tiene permiso":reason==="stopped"?"🎤":reason==="unavailable"?"🎤 El reconocimiento de voz no está disponible aquí":"🎤 El micro se ha parado — pulsa «Ya lo he dicho»";
+      }
+    });
+  }
+  applyCaps();
+})();
+setTimeout(()=>{ if(!DICT) $("micNote").textContent="ℹ️ Este navegador no reconoce la voz (usa Chrome, Edge o Safari): en estos juegos os corregís vosotros con ✅ / 🔁."; },inFrame?11000:1500);
+$("testVoice").addEventListener("click",()=>speakForms({inf:"go",past:"went",pp:"gone"}));
+
+/* long words shrink to fit their card instead of breaking in two */
+function fitText(el){
+  el.style.fontSize="";
+  let fs=parseFloat(getComputedStyle(el).fontSize)||20;
+  while(el.scrollWidth>el.clientWidth+1&&fs>11){fs-=1;el.style.fontSize=fs+"px";}
+}
+function fitAll(){document.querySelectorAll(".screen.on .fc b, .screen.on .choice").forEach(el=>{if(el.offsetParent)fitText(el);});}
+let fitQueued=false;
+new MutationObserver(muts=>{
+  // ignore the font-size changes this code makes itself
+  if(muts.every(m=>m.type==="attributes"&&m.attributeName==="style"&&m.target.matches&&m.target.matches(".fc b, .choice")))return;
+  if(fitQueued)return;fitQueued=true;requestAnimationFrame(()=>{fitQueued=false;fitAll();});})
+  .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["style","class"]});
+window.addEventListener("resize",()=>requestAnimationFrame(fitAll));
+
+/* ---------- GAME STATE ---------- */
+let G=null, timerId=null;
+function setProg(prefix){
+  const done=G.total-G.remaining();
+  $(prefix+"-prog").style.width=(100*done/G.total)+"%";
+  $(prefix+"-score").textContent="⭐ "+G.score;
+}
+
+document.querySelectorAll("[data-start]").forEach(b=>b.addEventListener("click",()=>{
+  const m=b.dataset.start;
+  if(m==="list"){renderList();show("list");return;}
+  startGame(m,b.dataset.variant);
+}));
+function startGame(mode,variant,opts){
+  opts=opts||{};
+  stopAll();
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume()}catch(e){}
+  if(mode!=="speak")sayPraise("p_ready");
+  const d=opts.deck?opts.deck.slice():deck();
+  G={mode,variant:variant==="mix"?"es":(variant||null),mix:variant==="mix",pathStep:opts.step||null,opts,path:opts.path||null,qid:0,queue:d.slice(),total:d.length,score:0,max:d.length*(mode==="type"?2:1),missed:new Set(),retried:new Set(),
+     remaining(){return this.queue.length}};
+  if(mode==="speak"){show("speak");nextSpeak();}
+  if(mode==="type"){show("type");nextType();}
+  if(mode==="choice"){show("choice");nextChoice();}
+}
+function finishOrNext(fn){ if(G.queue.length===0) endGame(); else fn(); }
+
+/* ---------- MODE 1: SPEAK ---------- */
+let phase="idle", heard="", partial="", spOutcome=null, dictLang="en", lastSpeech=0, listenT0=0, micWatch=null;
+const micOn=()=>!!DICT&&S.mic==="on";
+function stopMic(){try{DICT&&DICT.active()&&DICT.stop().catch(()=>{})}catch(e){}}
+const FORM_NAME={inf:"infinitive",past:"past simple",pp:"past participle"};
+function curKeys(){ if(G.variant==="toEn")return["inf"]; if(G.variant==="toEs")return[]; return (G.variant==="es"||G.variant==="learn")?["inf","past","pp"]:G.variant==="en"?["past","pp"]:[G.qkey]; }
+function nextSpeak(){
+  if(G.mix)G.variant=pick(["es","en","q","toEn","toEs"]);
+  stopAll(!micOn());
+  const v=G.queue[0];
+  setProg("sp");
+  const V=G.variant;
+  $("sp-word").style.color=(V==="es"||V==="learn")?"var(--ink)":"var(--inf)";
+  $("sp-learn").style.display="none";
+  $("sp-go").textContent="🎤 ¡Ahora tú!";$("sp-rep").textContent="🔊 Repetir la pregunta";
+  if(V==="learn"){
+    $("sp-ask").textContent="Aprende este verbo";
+    $("sp-word").textContent=v.es;$("sp-sub").textContent="";
+    $("sp-hint").textContent=micOn()?"Escucha y repite las 3 formas":"Escucha y repite en voz alta";
+    $("sp-l0").textContent=v.inf;$("sp-l1").textContent=v.past;$("sp-l2").textContent=v.pp;
+    const tip=verbTip(v);
+    $("sp-tip").textContent=tip?"💡 "+tip:"";$("sp-tip").style.display=tip?"":"none";
+    $("sp-learn").style.display="";
+    $("sp-f0").textContent=v.inf;$("sp-f1").textContent=v.past;$("sp-f2").textContent=v.pp;
+    $("sp-go").textContent=micOn()?"🎤 ¡Repite conmigo!":"Siguiente →";
+    $("sp-rep").textContent="🔊 Escuchar otra vez";$("sp-rep").style.display="";
+    phase="prompt";
+    document.querySelectorAll("#sp-reveal .mark").forEach(m=>m.remove());
+    $("sp-think").style.display="none";$("sp-reveal").style.display="none";$("sp-prompt").style.display="";
+    speakLearn(v);
+    return;
+  }
+  if(V==="toEn"){
+    $("sp-ask").textContent="¿Cómo se dice en inglés?";
+    $("sp-word").textContent=v.es;$("sp-word").style.color="var(--ink)";$("sp-sub").textContent="";
+    $("sp-hint").textContent="Di el verbo en inglés (solo el infinitivo)";
+  }else if(V==="toEs"){
+    $("sp-ask").textContent="¿Qué significa…?";
+    $("sp-word").textContent=v.inf;$("sp-sub").textContent="";
+    $("sp-hint").textContent="🇪🇸 Dilo en español";
+  }else if(V==="es"){
+    $("sp-ask").textContent="¿Cómo se dice en inglés?";
+    $("sp-word").textContent=v.es;$("sp-sub").textContent="";
+    $("sp-hint").textContent="Di las 3 formas: infinitive · past simple · participle";
+  }else if(V==="en"){
+    $("sp-ask").textContent="Escucha y sigue…";
+    $("sp-word").textContent=v.inf;$("sp-sub").textContent="("+v.es+")";
+    $("sp-hint").textContent="Di las otras 2: past simple · participle";
+  }else{
+    G.qkey=Math.random()<.5?"past":"pp";
+    const col=G.qkey==="past"?"var(--past)":"var(--pp)";
+    $("sp-ask").innerHTML='What\'s the <b style="color:'+col+'">'+FORM_NAME[G.qkey]+'</b> of…';
+    $("sp-word").textContent=v.inf;$("sp-sub").textContent="("+v.es+")";
+    $("sp-hint").innerHTML='Di solo el <b style="color:'+col+'">'+FORM_NAME[G.qkey]+'</b>';
+  }
+  if(G.retried.has(v.inf)) $("sp-hint").innerHTML="🔁 ¡Otra oportunidad! "+$("sp-hint").innerHTML;
+  $("sp-f0").textContent=v.inf;$("sp-f1").textContent=v.past;$("sp-f2").textContent=v.pp;
+  const silent=V==="es"||V==="toEn";
+  if(!micOn()){ $("sp-prompt").style.display="none"; if(!silent)sayPrompt(); startThinking(); return; }
+  // Claude asks (if it is a listening game); the child taps the microphone once to answer
+  if(!silent)sayPrompt();
+  $("sp-rep").style.display=silent?"none":"";
+  {
+    phase="prompt";
+    document.querySelectorAll("#sp-reveal .mark").forEach(m=>m.remove());
+    $("sp-think").style.display="none";$("sp-reveal").style.display="none";$("sp-prompt").style.display="";
+  }
+}
+function sayPrompt(){
+  const v=G.queue[0];
+  const inf=cap(sayText(v,"inf"));
+  const text=(G.variant==="en"||G.variant==="toEs")?inf+"!":"What's the "+FORM_NAME[G.qkey]+" of "+sayText(v,"inf")+"?";
+  out([{id:G.variant==="q"?"q_"+G.qkey+"_"+v.inf:clipId(v,"inf"),text,praise:true}]);
+}
+function goAnswer(){
+  if(phase!=="prompt")return;
+  if(G.variant==="learn"&&!micOn()){stopAll();phase="idle";advanceSpeak(true);finishOrNext(nextSpeak);return;}
+  stopAll();startThinking();
+}
+$("sp-go").addEventListener("click",goAnswer);
+// space bar or Enter also answer (a key press counts as a tap)
+document.addEventListener("keydown",e=>{
+  if(!$("speak").classList.contains("on"))return;
+  if((e.key===" "||e.key==="Enter")&&phase==="prompt"){e.preventDefault();goAnswer();}
+});
+function autoNext(promise,extra){
+  const id=++G.qid;
+  Promise.resolve(promise).then(()=>wait(extra)).then(()=>{
+    if(G&&G.qid===id&&phase==="reveal"){advanceSpeak(spOutcome==="ok");finishOrNext(nextSpeak);}
+  });
+}
+$("sp-rep").addEventListener("click",()=>{ if(phase!=="prompt")return; if(G.variant==="learn")speakLearn(G.queue[0]); else sayPrompt(); });
+function startThinking(){   // called synchronously from a click, so the microphone may start
+  document.querySelectorAll("#sp-reveal .mark").forEach(m=>m.remove());
+  $("sp-prompt").style.display="none";$("sp-think").style.display="";$("sp-reveal").style.display="none";
+  $("sp-learn").style.display=G.variant==="learn"?"":"none";
+  phase="think";heard="";partial="";spOutcome=null;
+  $("sp-heard").textContent="";
+  $("sp-mic").style.display=micOn()?"":"none";
+  $("sp-skip").textContent=micOn()?"Ya lo he dicho → ver":"Ya lo he dicho → ver";
+  if(micOn()){
+    listen();
+    lastSpeech=0;listenT0=performance.now();
+    runTimer(+S.secs+6,()=>{});           // visual only: the microphone decides when to stop
+    clearInterval(micWatch);
+    micWatch=setInterval(()=>{
+      if(phase!=="think"){clearInterval(micWatch);return;}
+      const now=performance.now(),el=(now-listenT0)/1000;
+      const spoke=(heard+partial).trim().length>0;
+      if(spoke&&now-lastSpeech>2300){clearInterval(micWatch);revealSpeak();}      // they finished talking
+      else if(el>+S.secs+6&&(!spoke||now-lastSpeech>1200)){clearInterval(micWatch);revealSpeak();}
+      else if(el>+S.secs+14){clearInterval(micWatch);revealSpeak();}           // hard limit
+    },150);
+  } else runTimer(+S.secs,revealSpeak);
+}
+function listen(){
+  const inEs=G.variant==="toEs";
+  $("sp-mic").className="mic on";$("sp-mic-t").textContent=inEs?"🎤 Te escucho… ¡habla en español!":"🎤 Te escucho… ¡habla en inglés!";
+  const opts={language:inEs?"es":"en"};
+  DICT.start(opts).catch(err=>{
+    const c=err&&err.code;
+    $("sp-mic").className="mic";
+    if(c==="not_granted"){S.mic="off";$("sp-mic-t").textContent="🚫 Sin permiso para el micrófono: corrígete tú";$("sp-mic").className="mic";setTimeout(()=>{if(phase==="think"){clearInterval(micWatch);runTimer(+S.secs,revealSpeak);}},400);}
+    else if(c==="unavailable"){$("sp-mic-t").textContent="🎤 El reconocimiento en inglés no está disponible aquí";}
+    else if(c==="dismissed"){$("sp-mic-t").textContent="🎤 Hay que permitir el micrófono";}
+    else if(c!=="stopped"){$("sp-mic-t").textContent="🎤 El micro no responde ahora";}
+  });
+}
+function showHeard(){$("sp-heard").innerHTML=(heard+" "+partial).trim()?'<span class="waves"><i></i><i></i><i></i><i></i><i></i></span> ¡Te oigo!':"";}
+function evalCur(v,t){return G.variant==="toEs"?evaluateEs(v,t):evaluate(v,t);}
+function checkEarly(){const r=evalCur(G.queue[0],heard+" "+partial);if(r.all)revealSpeak();}
+
+/* --- comparing what was heard with the verb --- */
+const HOMO={"god":["got"],"gods":["got"],"gott":["got"],"goat":["got"],"gut":["got"],"gosh":["got"],"goth":["got"],"cat":["cut"],"kat":["cut"],"cuts":["cut"],"could":["cut"],"cup":["cut"],"cud":["cut"],"cot":["caught","cut"],"good":["put"],"foot":["put"],"pot":["put"],"putt":["put"],"puts":["put"],"but":["put"],"hat":["hit","had"],"heat":["hit"],"hits":["hit"],"it":["hit"],"lit":["let"],"lets":["let"],"late":["let"],"led":["let","read"],"shot":["shut"],"shoot":["shut"],"shuts":["shut"],"8":["ate"],"eight":["ate"],"1":["won"],"one":["won"],"red":["read"],"reed":["read"],"new":["knew"],"maid":["made"],"bean":["been"],"bin":["been"],"ben":["been"],
+ "sea":["see"],"c":["see"],"by":["buy"],"bye":["buy"],"bi":["buy"],"right":["write"],"rite":["write"],"rights":["write"],"rate":["write"],"road":["rode","wrote"],"rowed":["rode"],"rote":["wrote"],"rot":["wrote"],
+ "britain":["written"],"britten":["written"],"ritten":["written"],"bitten":["written"],"retain":["written"],"rotten":["written"],
+ "war":["wore"],"cent":["sent"],"scent":["sent"],"flu":["flew"],"flue":["flew"],"through":["threw"],"thru":["threw"],"herd":["heard"],"hurt":["heard"],"here":["hear"],
+ "meat":["meet"],"no":["know"],"bee":["be"],"b":["be"],"due":["do"],"dew":["do"],"sore":["saw"],"so":["saw"],"taut":["taught"],"court":["caught"],"cot":["caught"],
+ "scene":["seen"],"eden":["eaten"],"eatin":["eaten"],"gotta":["got"],"gon":["gone"],"gun":["gone","begun"],"done":["done"],"dun":["done"],"none":["known"],"nun":["known"],
+ "had":["had"],"hat":["had"],"half":["have"],"tuck":["took"],"tool":["took"],"stud":["stood"],"stewed":["stood"],"shot":["shut"],"cot":["caught","cut"],"sad":["said","sat"],
+ "said":["said"],"set":["sat"],"sit":["sit"],"met":["met"],"lead":["leave"],"live":["leave"],"left":["left"],"fill":["feel"],"field":["felt"],"fall":["fall"],"fill":["fell"],
+ "swam":["swam"],"swamp":["swam"],"swan":["swam"],"swarm":["swam","swum"],"some":["swum"],"sum":["swum"],"zoom":["swum"],"swoon":["swum"],"swung":["swum"],"swoom":["swum"],"swim":["swim"],"song":["sung"],"sun":["sung"],"son":["sung"],"sunk":["sung"],"sang":["sang"],"sank":["sang"],"trunk":["drunk"],"begone":["begun"],"beckon":["begun"],"bacon":["begin"],"drunk":["drunk"],"drank":["drank"],"rang":["ran"],"rung":["run"],
+ "brake":["break"],"brook":["broke"],"broken":["broken"],"chews":["choose"],"choose":["choose"],"chosen":["chosen"],"bill":["build"],"billed":["built"],"bilt":["built"],
+ "grown":["grown"],"groan":["grown"],"thrown":["thrown"],"throne":["thrown"],"grew":["grew"],"through":["threw"],"woke":["woke"],"walk":["woke"],"woken":["woken"],
+ "wear":["wear"],"where":["wear"],"ware":["wear"],"warn":["worn"],"one":["won"],"wan":["won"],"win":["win"],"lose":["lose"],"loose":["lose"],"lost":["lost"],
+ "pay":["pay"],"paid":["paid"],"payed":["paid"],"mean":["mean"],"meant":["meant"],"mint":["meant"],"meet":["meet"],"held":["held"],"hold":["hold"],"keep":["keep"],"cap":["kept"],"kept":["kept"]};
+function tokens(t){return t.toLowerCase().replace(/[’']/g,"").replace(/[^a-z0-9 ]+/g," ").split(/\s+/).filter(Boolean);}
+function lev(a,b){const m=a.length,n=b.length,d=[];for(let i=0;i<=m;i++){d[i]=[i];}for(let j=1;j<=n;j++)d[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n];}
+// rough "sounds like" key: silent letters and spellings that sound the same
+function snd(w){return w.replace(/^wr/,"r").replace(/^kn/,"n").replace(/^wh/,"w").replace(/ght/g,"t").replace(/gh/g,"").replace(/ph/g,"f").replace(/ck/g,"k")
+  .replace(/ou|ow|oa/g,"o").replace(/ee|ea|ie/g,"i").replace(/ay|ai|ei/g,"a").replace(/(.)\1+/g,"$1").replace(/e$/,"");}
+function okWords(v,k){
+  if(v[k]==="was / were")return["was","were"];
+  const w=[v[k],...altOf(v,k)];if(v.inf==="get"&&k==="pp")w.push("gotten");return w;
+}
+// which form of THIS verb does a heard word sound like? (null if none is close)
+function classify(v,word,joined){
+  const forms=[];
+  [["inf",v.inf],["past",v.past],["pp",v.pp]].forEach(([k,f])=>okWords(v,k).forEach(w=>forms.push({k,w})));
+  [regular(v.inf),v.inf+"ed",v.past+"ed"].forEach(w=>{if(!forms.some(f=>f.w===w))forms.push({k:"wrong",w});});
+  const cands=[word,...(HOMO[word]||[])];
+  let best=null;
+  cands.forEach((c,ci)=>forms.forEach(f=>{
+    let d=Math.min(lev(c,f.w),lev(snd(c),snd(f.w))+0.5);
+    const cs=w=>snd(w).replace(/^c/,"k").replace(/[aeiouy]/g,"");
+    if(!joined&&d>0.9&&cs(c)&&cs(c)===cs(f.w))d=0.9;
+    if(ci>0&&c===f.w)d=0.1;                        // known sound-alike
+    if(!best||d<best.d||(d===best.d&&f.k!=="wrong"&&best.k==="wrong"))best={k:f.k,w:f.w,d};
+  }));
+  if(!best)return null;
+  const L=best.w.length, tol=L<=3?1:L<=5?1.5:2.5;
+  return best.d<=tol?best:null;
+}
+function evaluate(v,text){
+  const keys=curKeys();
+  const tk=tokens(text);
+  // also try two words joined ("writ ten" -> "written")
+  const words=[];tk.forEach((t,i)=>{words.push({t,i});if(i+1<tk.length)words.push({t:t+tk[i+1],i:i+1,j:true});});
+  const cls=words.map(o=>({...o,c:classify(v,o.t,o.j)}));
+  const found={};let pos=0;
+  const same=(a,b)=>v[a]===v[b];
+  if(v.inf===v.past&&v.past===v.pp){
+    const fam=cls.filter(o=>!o.j&&o.c&&o.c.k!=="wrong").length;
+    const wrong=cls.some(o=>!o.j&&o.c&&o.c.k==="wrong");
+    keys.forEach(k=>found[k]=fam>0&&!wrong);
+    return{found,all:fam>0&&!wrong,any:tk.length>0};
+  }
+  // verbs whose forms only change a vowel (swim-swam-swum, sing-sang-sung...): speech recognition mixes them up,
+  // so a word of the same family counts if it is NOT the same word they just said (swim swam swam stays wrong)
+  const cons=w=>w.replace(/[aeiou]/g,"");
+  const vowelFam=v.inf!=="be"&&cons(v.inf)===cons(v.past)&&cons(v.past)===cons(v.pp);
+  let prevWord=null;
+  keys.forEach(k=>{
+    let hit=null;
+    for(const o of cls){
+      if(o.i<pos||!o.c)continue;
+      if(o.c.k===k||(o.c.k!=="wrong"&&same(o.c.k,k))){hit=o;break;}
+    }
+    if(!hit&&vowelFam&&keys.length>1&&k==="pp"){
+      for(const o of cls){
+        if(o.i<pos||!o.c||o.c.k==="wrong"||o.j)continue;
+        if(prevWord!==null&&o.t===prevWord)continue;
+        hit=o;break;
+      }
+    }
+    found[k]=!!hit;if(hit){pos=hit.i+1;prevWord=hit.t;}
+  });
+  // "got, got" is often written as a single "got": if past and participle are the same word, one covers both
+  if(v.past===v.pp&&keys.includes("past")&&keys.includes("pp")&&found.past&&!found.pp){
+    const famWords=cls.filter(o=>!o.j&&o.c&&o.c.k!=="wrong").length;
+    if(famWords===keys.length-1)found.pp=true;   // exactly one word short: the recognizer merged "got, got"
+  }
+  return{found,all:keys.every(k=>found[k]),any:tk.length>0};
+}
+
+async function revealSpeak(){
+  if(phase!=="think")return;
+  clearInterval(timerId);
+  const v=G.queue[0];
+  let res=null;
+  if(micOn()){
+    phase="stopping";
+    $("sp-mic").className="mic";$("sp-mic-t").textContent="⏳ Escuchando lo último…";
+    clearInterval(micWatch);try{await Promise.race([DICT.stop(),wait(4500)]);}catch(e){}
+    res=evalCur(v,heard+" "+partial);
+  }
+  phase="reveal";$("sp-learn").style.display="none";
+  $("sp-think").style.display="none";$("sp-reveal").style.display="";
+  const els=[...document.querySelectorAll("#sp-reveal .fc")];
+  $("sp-heard2").textContent="";$("sp-result").textContent="";$("sp-result").className="feedback";
+  if(!res){
+    $("sp-self").style.display="";$("sp-auto").style.display="none";
+    speakForms(v,els);
+    return;
+  }
+  $("sp-self").style.display="none";$("sp-auto").style.display="";
+  ["inf","past","pp"].forEach((k,i)=>{
+    if(!(k in res.found))return;
+    const m=document.createElement("span");m.className="mark "+(res.found[k]?"y":"n");m.textContent=res.found[k]?"✓":"✗";els[i].appendChild(m);
+  });
+  const said=(heard+" "+partial).trim();
+  if(res.all){
+    spOutcome="ok";
+    $("sp-result").textContent=pick(["Yeah! 🎉 ¡Perfecto!","Yeah! ⭐ ¡Lo has clavado!","Yeah! 🚀 ¡Muy bien dicho!"]);$("sp-result").className="feedback good";
+    $("sp-override").style.display="none";$("sp-retry").style.display="none";
+    sfxGood();burst(6);
+    autoNext(praise(true),350);
+  }else{
+    spOutcome="bad";
+    $("sp-result").textContent=said?"¡Casi! Escucha y repite 👂":"No te he oído 🤔 ¡Habla más alto!";$("sp-result").className="feedback bad";
+    $("sp-override").style.display=said?"":"none";$("sp-retry").style.display="";
+    sfxBad();
+    if(G.variant==="toEs"||G.variant==="toEn"){
+      $("sp-result").textContent=(said?"¡Casi! ":"")+v.inf+" = "+esMain(v);
+      autoNext(sayMeaning(v,said),2600);
+    }else autoNext(speakForms(v,els,null,said?"bad":null),2600);
+  }
+}
+$("sp-skip").addEventListener("click",revealSpeak);
+$("sp-again").addEventListener("click",()=>speakForms(G.queue[0],[...document.querySelectorAll("#sp-reveal .fc")]));
+function advanceSpeak(ok){
+  const v=G.queue.shift();
+  noteSeen(v);
+  if(G.variant!=="learn")noteResult(v,ok);
+  if(ok){ if(!G.retried.has(v.inf)) G.score++; }
+  else{ G.missed.add(v); if(!G.retried.has(v.inf)){G.retried.add(v.inf);G.queue.splice(Math.min(3,G.queue.length),0,v);} }
+}
+// self-graded (no microphone)
+$("sp-yes").addEventListener("click",()=>{
+  advanceSpeak(true);sfxGood();burst(4);praise(true);
+  $("sp-reveal").style.display="none";
+  setTimeout(()=>finishOrNext(nextSpeak),900);
+});
+$("sp-no").addEventListener("click",()=>{
+  advanceSpeak(false);sfxBad();praise(false);
+  $("sp-reveal").style.display="none";
+  setTimeout(()=>finishOrNext(nextSpeak),900);
+});
+// graded by the microphone
+$("sp-next").addEventListener("click",()=>{G.qid++;stopAll();advanceSpeak(spOutcome==="ok");finishOrNext(nextSpeak);});
+$("sp-retry").addEventListener("click",()=>{G.qid++;stopAll();startThinking();});
+$("sp-override").addEventListener("click",()=>{
+  spOutcome="ok";$("sp-override").style.display="none";
+  document.querySelectorAll("#sp-reveal .mark.n").forEach(m=>{m.className="mark y";m.textContent="✓";});
+  $("sp-result").textContent="¡Vale! Te creo 😄";$("sp-result").className="feedback good";
+  sfxGood();G.qid++;autoNext(out([{id:"p_great",text:"Great job!",praise:true}]),500);
+});
+
+function runTimer(secs,done){
+  const ring=$("sp-ring"),num=$("sp-num"),box=$("sp-timer");const C=402.1;
+  const t0=performance.now();let lastShown=null;
+  box.classList.remove("urgent");ring.style.stroke="#ffc23c";
+  clearInterval(timerId);
+  const tick=()=>{
+    const el=(performance.now()-t0)/1000,left=Math.max(0,secs-el);
+    ring.setAttribute("stroke-dashoffset",(C*(1-left/secs)).toFixed(1));
+    const shown=Math.ceil(left);
+    if(shown!==lastShown){lastShown=shown;num.textContent=shown;
+      if(shown<=3&&shown>0){box.classList.add("urgent");ring.style.stroke="#f43f5e";sfxTick();}}
+    if(left<=0){clearInterval(timerId);sfxGo();done();}
+  };
+  tick();timerId=setInterval(tick,50);
+}
+/* ---------- MODE 2: TYPE ---------- */
+const norm=s=>s.toLowerCase().replace(/[’']/g,"").replace(/\s+/g," ").trim();
+function accepts(v,key){
+  const base=v[key];
+  const set=new Set([norm(base)]);
+  if(base==="was / were"){["was","were","was/were","was / were","was were","was or were","was, were","was o were"].forEach(x=>set.add(x));}
+  if(v.inf==="get"&&key==="pp")set.add("gotten");
+  altOf(v,key).forEach(x=>set.add(x));
+  return set;
+}
+let typeChecked=false;
+function nextType(){
+  stopAll(true);typeChecked=false;
+  const v=G.queue[0];setProg("ty");
+  $("ty-word").textContent=v.inf;$("ty-es").textContent="("+v.es+")";
+  ["ty-a","ty-b"].forEach(id=>{const i=$(id);i.value="";i.className="";i.disabled=false;});
+  $("ty-fa").textContent="";$("ty-fb").textContent="";$("ty-fb-msg").textContent="";$("ty-fb-msg").className="feedback";
+  $("ty-check").textContent="Comprobar ✔";
+  setTimeout(()=>$("ty-a").focus(),60);
+}
+$("ty-form").addEventListener("submit",e=>{
+  e.preventDefault();
+  if(typeChecked){G.queue.shift();finishOrNext(nextType);return;}
+  const v=G.queue[0];
+  const a=norm($("ty-a").value),b=norm($("ty-b").value);
+  if(!a&&!b){$("ty-a").focus();return;}
+  typeChecked=true;
+  const okA=accepts(v,"past").has(a),okB=accepts(v,"pp").has(b);
+  $("ty-a").className=okA?"right":"wrong";$("ty-b").className=okB?"right":"wrong";
+  $("ty-a").disabled=$("ty-b").disabled=true;
+  if(!okA)$("ty-fa").textContent="✔ "+v.past;
+  if(!okB)$("ty-fb").textContent="✔ "+v.pp;
+  G.score+=(okA?1:0)+(okB?1:0);
+  if(!(okA&&okB))G.missed.add(v);
+  const m=$("ty-fb-msg");
+  if(okA&&okB){m.textContent=pick(["¡Perfecto! 🎉","¡Muy bien! 💪","¡Crack! ⭐","¡Genial! 🚀"]);m.className="feedback good";sfxGood();burst(6);}
+  else if(okA||okB){m.textContent="¡Casi! Una bien 👍";m.className="feedback bad";sfxBad();}
+  else{m.textContent="¡Uy! Mira cómo es 👀";m.className="feedback bad";sfxBad();}
+  $("ty-score").textContent="⭐ "+G.score;
+  $("ty-check").textContent="Siguiente →";
+  speakForms(v,null,null,okA&&okB?"ok":"bad");
+  setTimeout(()=>$("ty-check").focus(),50);
+});
+$("ty-hear").addEventListener("click",()=>{ if(typeChecked) speakForms(G.queue[0]); else speakForms(G.queue[0],[],["inf"]); });
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ---------- MODE 3: CHOICE ---------- */
+function regular(w){
+  if(/e$/.test(w))return w+"d";
+  if(/[^aeiou]y$/.test(w))return w.slice(0,-1)+"ied";
+  return w+"ed";
+}
+function distractors(v,key){
+  const correct=v[key];
+  const c=[v.inf,v.past,v.pp,regular(v.inf)];
+  if(key==="pp"){c.push(v.past.endsWith("ed")?v.past:v.past+"en");}
+  else{c.push(v.pp, v.inf+"s");}
+  if(!correct.endsWith("t")&&!correct.endsWith("d")) c.push(correct+"ed");
+  let out=shuffle([...new Set(c.filter(x=>x&&x!==correct&&!altOf(v,key).includes(x)&&!(v.inf==="be"&&/^(was|were)$/.test(x))))]);
+  // keep the most "tempting" ones: same verb forms first
+  const same=out.filter(x=>[v.inf,v.past,v.pp].includes(x));
+  const rest=out.filter(x=>!same.includes(x));
+  out=[...same,...rest].slice(0,3);
+  while(out.length<3){const o=pick(VERBS)[key];if(o!==correct&&!out.includes(o))out.push(o);}
+  return shuffle([correct,...out]);
+}
+let chLocked=false;
+function nextChoice(){
+  stopAll(true);chLocked=false;
+  const v=G.queue[0];setProg("ch");
+  const key=pick(["past","pp","toEs","toEn"]);
+  G.key=key;
+  const others=shuffle(pool().concat(VERBS.filter(x=>x.lvl===1)).filter(x=>x!==v&&x.es!==v.es));
+  let opts;
+  $("ch-word").style.color="var(--inf)";
+  if(key==="toEs"){
+    $("ch-ask").textContent="¿Qué significa…?";$("ch-word").textContent=v.inf;$("ch-es").textContent="";
+    G.correct=v.es;opts=shuffle([v.es,...[...new Set(others.map(x=>x.es))].slice(0,3)]);
+  }else if(key==="toEn"){
+    $("ch-ask").textContent="¿Cómo se dice en inglés…?";$("ch-word").textContent=v.es;$("ch-word").style.color="var(--ink)";$("ch-es").textContent="";
+    G.correct=v.inf;opts=shuffle([v.inf,...[...new Set(others.map(x=>x.inf))].slice(0,3)]);
+  }else{
+    $("ch-ask").innerHTML=key==="past"?'¿Cuál es el <b style="color:var(--past)">past simple</b> de…':'¿Cuál es el <b style="color:var(--pp)">past participle</b> de…';
+    $("ch-word").textContent=v.inf;$("ch-es").textContent="("+v.es+")";
+    G.correct=v[key];opts=distractors(v,key);
+  }
+  $("ch-fb").textContent="";$("ch-fb").className="feedback";
+  $("ch-forms").style.display="none";$("ch-next").style.display="none";
+  $("ch-f0").textContent=v.inf;$("ch-f1").textContent=v.past;$("ch-f2").textContent=v.pp;
+  const box=$("ch-opts");box.innerHTML="";
+  opts.forEach(opt=>{
+    const b=document.createElement("button");b.className="choice";b.textContent=opt;
+    b.addEventListener("click",()=>answerChoice(b,opt));box.appendChild(b);
+  });
+}
+function answerChoice(btn,opt){
+  if(chLocked)return;chLocked=true;
+  const v=G.queue[0],correct=G.correct;
+  document.querySelectorAll("#ch-opts .choice").forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add("right");});
+  if(opt===correct){G.score++;$("ch-fb").textContent=pick(["¡Correcto! 🎉","¡Bien hecho! ⭐","¡Eso es! 🚀"]);$("ch-fb").className="feedback good";sfxGood();burst(5);}
+  else{btn.classList.add("wrong");G.missed.add(v);$("ch-fb").textContent="¡Casi! Es “"+correct+"”";$("ch-fb").className="feedback bad";sfxBad();}
+  $("ch-score").textContent="⭐ "+G.score;
+  $("ch-forms").style.display="none";$("ch-next").style.display="";
+  noteResult(v,opt===correct);noteSeen(v);
+  const ok=opt===correct;
+  const pid=pick(PRAISE_OK);
+  const meaning=G.key==="toEs"||G.key==="toEn";
+  const pr=meaning?(ok?out([{id:pid,text:PRAISE_TEXT[pid],praise:true},{id:clipId(v,"inf"),text:cap(sayText(v,"inf"))+"!"},{id:"es_"+v.inf,text:cap(esMain(v))+".",lang:"es"}]):sayMeaning(v,true))
+          :ok?out([{id:pid,text:PRAISE_TEXT[pid],praise:true},{id:clipId(v,G.key),text:cap(sayText(v,G.key))+"!"}])
+             :speakForms(v,[],null,"bad");
+  const id=++G.qid;
+  Promise.resolve(pr).then(()=>wait(ok?450:1600)).then(()=>{
+    if(G&&G.qid===id&&$("choice").classList.contains("on")){G.queue.shift();finishOrNext(nextChoice);}
+  });
+}
+$("ch-next").addEventListener("click",()=>{G.qid++;stopAll();G.queue.shift();finishOrNext(nextChoice);});
+
+/* ---------- END ---------- */
+function endGame(){
+  stopAll();
+  const pct=G.max?G.score/G.max:0;
+  const stars=pct>=.9?3:pct>=.6?2:1;
+  $("en-stars").textContent="⭐".repeat(stars)+"☆".repeat(3-stars);
+  $("en-msg").textContent=stars===3?"¡Eres un crack! 🏆":stars===2?"¡Muy bien! 💪":"¡Sigue practicando! 🌱";
+  $("en-score").textContent="Puntos: "+G.score+" de "+G.max;
+  $("en-unlock").textContent="";
+  $("en-path").style.display=G.path?"":"none";
+  if(G.path){
+    const {u,s}=G.path,k=u+"_"+s,P=getProg(),before=P[k]||0;
+    if(stars>before){P[k]=stars;store.set(progKey(),P);}
+    const steps=unitSteps(u);
+    if(stars>=2){
+      if(s+1<steps.length)$("en-unlock").textContent="🔓 ¡Desbloqueado: "+steps[s+1].ico+" "+steps[s+1].name+"!";
+      else if(u+1<UNITS.length)$("en-unlock").textContent="🎉 ¡Unidad terminada! Nuevo: "+unitTitle(u+1);
+      else $("en-unlock").textContent="🏆 ¡Has terminado todo el camino! ¡Eres un campeón de los verbos!";
+    }else $("en-unlock").textContent="Necesitas ⭐⭐ para seguir. ¡Otra vez!";
+  }else{
+    const key="best_"+G.mode+(G.variant?"-"+G.variant:"")+"_"+S.level;
+    const prev=store.get(key,null);
+    if(prev===null||pct>prev){store.set(key,pct); if(prev!==null) $("en-score").textContent+=" · ¡Nuevo récord! 🥇";}
+  }
+  const box=$("en-missed");box.innerHTML="";
+  if(G.missed.size){
+    box.innerHTML="<h3>📌 Para repasar</h3>";
+    const l=document.createElement("div");l.className="vlist";
+    [...G.missed].forEach(v=>l.appendChild(row(v)));box.appendChild(l);
+  }
+  if(stars>=2)burst(stars===3?30:14);
+  sayPraise(stars===3?"p_champion":stars===2?"p_well":"p_keep");
+  show("end");
+}
+$("en-again").addEventListener("click",()=>{
+  if(G.path)startStep(G.path.u,G.path.s); else startGame(G.mode,G.variant);
+});
+$("en-path").addEventListener("click",goHome);
+function renderBest(){
+  ["speak-es","speak-en","speak-q","type","choice"].forEach(m=>{
+    const p=store.get("best_"+m+"_"+S.level,null);
+    $("best-"+m).textContent=p===null?"":"🏅 Récord (nivel "+S.level+"): "+Math.round(p*100)+"%";
+  });
+}
+document.querySelector('[data-set="level"]').addEventListener("click",()=>setTimeout(renderBest,0));
+renderBest();
+renderPlayers();renderPath();
+
+/* ---------- LIST ---------- */
+function row(v){
+  const r=document.createElement("div");r.className="vrow";
+  const f=FAM[family(v)];
+  r.innerHTML=`<div class="esc"><div class="es">${v.es}</div><span class="fam" style="background:${f.bg};color:${f.fg}">${f.ex}</span></div>
+   <button class="chip inf">${v.inf}</button><button class="chip past">${v.past}</button><button class="chip pp">${v.pp}</button>
+   <button class="spk" title="Escuchar">🔊</button>`;
+  const chips=[...r.querySelectorAll(".chip")];
+  chips[0].onclick=()=>speakForms(v,chips,["inf"]);
+  chips[1].onclick=()=>speakForms(v,chips,["past"]);
+  chips[2].onclick=()=>speakForms(v,chips,["pp"]);
+  r.querySelector(".spk").onclick=()=>speakForms(v,chips);
+  return r;
+}
+function renderList(){
+  const q=norm($("ls-q").value||"");
+  const body=$("ls-body");body.innerHTML="";
+  ["AAA","ABB","ABA","ABC"].forEach(k=>{
+    const vs=VERBS.filter(v=>family(v)===k&&(!q||[v.inf,v.past,v.pp,v.es].some(x=>norm(x).includes(q))));
+    if(!vs.length)return;
+    const h=document.createElement("div");h.className="famhead";h.textContent=FAM[k].name+"  ("+FAM[k].ex+")";body.appendChild(h);
+    const l=document.createElement("div");l.className="vlist";vs.forEach(v=>l.appendChild(row(v)));body.appendChild(l);
+  });
+  if(!body.children.length)body.innerHTML='<p class="sub" style="text-align:center">No encuentro ese verbo 🤔</p>';
+}
+$("ls-q").addEventListener("input",renderList);
+
+/* ---------- CONFETTI ---------- */
+function burst(n){
+  const em=["🎉","⭐","✨","🎈","🌟"];
+  for(let i=0;i<n;i++){
+    const s=document.createElement("div");s.className="confetti";s.textContent=pick(em);
+    s.style.left=Math.random()*100+"vw";s.style.animationDelay=(Math.random()*.4)+"s";
+    document.body.appendChild(s);setTimeout(()=>s.remove(),2200);
+  }
+}
+</script>
+</body>
+</html>
