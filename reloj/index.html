@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What time is it? · La hora en inglés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff7e8; --ink:#2b2350; --muted:#6f6894; --card:#ffffff; --line:#eee4d2;
+  --past:#2f86f6; --past-soft:#dcebff; --past-ink:#1b5fbd;
+  --to:#ff7a45; --to-soft:#ffe6da; --to-ink:#c94d1c;
+  --oc:#1fb36b; --oc-ink:#0f7a47;
+  --hourh:#e11d48; --minh:#2b2350;
+  --ok:#1fb36b; --ok-soft:#d8f6e7; --bad:#f43f5e; --bad-soft:#ffe1e7; --sun:#ffc23c;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Fredoka,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(circle at 10% 0%,#ffe9c2 0,transparent 40%),radial-gradient(circle at 100% 100%,#e5f0ff 0,transparent 45%);}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit}
+.wrap{max-width:880px;margin:0 auto;padding:18px 16px 40px}
+.screen{display:none;animation:pop .25s ease}
+.screen.on{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.hero{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;padding:8px 0 4px;text-align:center}
+.hero h1{font-size:clamp(32px,6vw,48px);margin:0;line-height:1.05;font-weight:700}
+.hero p{margin:6px 0 0;color:var(--muted);font-size:18px}
+.now{background:#fff;border-radius:20px;padding:8px 14px;box-shadow:0 4px 0 var(--line);margin-top:10px;font-size:17px;display:inline-block}
+.now b{font-size:20px}
+.legend{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0 2px}
+.tag{padding:6px 12px;border-radius:999px;font-weight:600;font-size:15px}
+.t-past{background:var(--past-soft);color:var(--past-ink)}
+.t-to{background:var(--to-soft);color:var(--to-ink)}
+.t-oc{background:var(--ok-soft);color:var(--oc-ink)}
+
+.past{color:var(--past-ink)} .to{color:var(--to-ink)} .oc{color:var(--oc-ink)}
+b.past,b.to,b.oc,span.past,span.to,span.oc{font-weight:700}
+
+.panel{background:var(--card);border-radius:22px;padding:16px 18px;box-shadow:0 4px 0 var(--line);margin:16px 0}
+.panel h2{margin:0 0 10px;font-size:19px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+.row .lbl{min-width:130px;font-weight:600;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{background:#f4efe4;padding:8px 13px;border-radius:12px;font-size:15px;font-weight:500}
+.seg button.sel{background:var(--ink);color:#fff}
+
+.sect{font-size:20px;margin:22px 4px 10px}
+.players{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 4px 10px}
+.pl{background:#fff;padding:9px 16px;border-radius:999px;font-weight:600;font-size:16px;box-shadow:0 3px 0 var(--line)}
+.pl.sel{background:var(--ink);color:#fff;box-shadow:0 3px 0 #120d2b}
+.pl-edit{background:none;font-size:18px;padding:6px}
+.pl-in{font-family:inherit;font-size:16px;padding:8px 12px;border-radius:999px;border:3px solid var(--ink);width:150px}
+.unit{background:#fff;border-radius:22px;padding:14px 16px;margin:12px 0;box-shadow:0 4px 0 var(--line)}
+.unit h3{margin:0;font-size:19px}
+.unit .vs{color:var(--muted);font-size:15px;margin:3px 0 12px}
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.step{width:92px;text-align:center;background:none;padding:0}
+.step .c{width:62px;height:62px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:28px;background:#f4efe4;box-shadow:0 4px 0 #e2d8c4}
+.step.done .c{background:var(--ok-soft);box-shadow:0 4px 0 #a8e3c4}
+.step.next .c{background:var(--sun);box-shadow:0 4px 0 #d99a12;animation:bounce 1s infinite alternate}
+.step.lock{cursor:default}.step.lock .c{filter:grayscale(1);opacity:.45}
+.step small{display:block;font-size:12.5px;margin-top:5px;color:var(--muted);font-weight:600;line-height:1.1}
+.step .st{font-size:12px;min-height:15px;margin-top:2px}
+.step .cnt{font-size:11px;color:var(--muted);font-weight:600}
+@keyframes bounce{to{transform:scale(1.06)}}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.mode{background:var(--card);border-radius:22px;padding:16px;text-align:left;box-shadow:0 5px 0 var(--line);transition:transform .12s}
+.mode:hover{transform:translateY(-3px)}
+.mode:active{transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.mode .ico{font-size:34px}
+.mode h3{margin:6px 0 4px;font-size:20px}
+.mode p{margin:0;color:var(--muted);font-size:15px;line-height:1.3}
+
+.bar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back{background:#fff;border-radius:14px;padding:9px 14px;font-weight:600;box-shadow:0 3px 0 var(--line)}
+.prog{flex:1;height:14px;background:#efe6d6;border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--sun),#ff8a3c);border-radius:99px;transition:width .3s}
+.score{font-weight:700;font-size:18px;white-space:nowrap}
+
+.stage{background:var(--card);border-radius:28px;padding:20px 16px 24px;box-shadow:0 6px 0 var(--line);text-align:center}
+.ask{color:var(--muted);font-size:19px;margin:0 0 6px}
+.big{font-size:clamp(32px,7.5vw,56px);font-weight:700;margin:6px 0 2px;line-height:1.1}
+.big.es{font-size:clamp(28px,6.5vw,48px)}
+.sub{color:var(--muted);font-size:18px;margin:2px 0 6px}
+.tip{background:#fff4d6;color:#7a5600;border-radius:14px;padding:10px 14px;font-size:17px;margin:12px auto 0;max-width:600px}
+.clockbox{margin:4px auto;width:min(310px,78vw)}
+.clockbox svg{width:100%;height:auto;display:block}
+.clockbox.drag svg{touch-action:none;cursor:grab}
+.clocklegend{font-size:14px;color:var(--muted);margin-top:2px}
+.lesson{font-size:clamp(19px,3.6vw,23px);line-height:1.4;max-width:620px;margin:10px auto 0}
+.lbig{font-size:clamp(30px,6.5vw,44px);font-weight:700;margin:8px 0 2px}
+.unit.locked{opacity:.55}
+.speaker{font-size:84px;margin:10px 0 0;background:none;animation:bounce 1s infinite alternate}
+
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.btn{padding:14px 20px;border-radius:18px;font-size:19px;font-weight:600;background:#f1ebdf;box-shadow:0 4px 0 #ddd2bd}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #ddd2bd}
+.btn.go{background:var(--sun);box-shadow:0 4px 0 #d99a12}
+.btn.ok{background:var(--ok);color:#fff;box-shadow:0 4px 0 #13814c}
+.btn.bad{background:var(--bad);color:#fff;box-shadow:0 4px 0 #b9203d}
+.btn.dark{background:var(--ink);color:#fff;box-shadow:0 4px 0 #120d2b}
+.btn.small{font-size:16px;padding:10px 14px}
+.big-mic{font-size:28px;padding:20px 40px;animation:bounce 1s infinite alternate}
+.note{color:var(--muted);font-size:14px;text-align:center;margin-top:10px}
+
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.choice{background:#f6f1e7;border-radius:18px;padding:16px 8px;font-size:clamp(19px,4vw,25px);font-weight:600;box-shadow:0 4px 0 #e2d8c4;line-height:1.15}
+.choice.clk{padding:8px}
+.choice.clk svg{width:100%;max-width:170px;height:auto}
+.choice.right{background:var(--ok-soft);box-shadow:0 0 0 4px var(--ok),0 4px 0 #13814c}
+.choice.wrong{background:var(--bad-soft);box-shadow:0 0 0 4px var(--bad),0 4px 0 #b9203d}
+.choice:disabled{cursor:default}
+
+.feedback{font-size:24px;font-weight:700;min-height:32px;margin-top:12px}
+.feedback.good{color:var(--ok)}.feedback.bad{color:var(--bad)}.feedback.almost{color:#c27c00}
+.answer{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:8px}
+.answer .mini{width:120px;margin:0}
+.answer .txt{text-align:left}
+.answer .en{font-size:clamp(24px,5vw,34px);font-weight:700}
+.answer .esl{font-size:18px;color:var(--muted)}
+
+.mic{margin:14px auto 4px;max-width:520px;background:#f4efe4;border-radius:16px;padding:12px 14px;font-weight:600;font-size:19px}
+.mic.on{background:#ffe1e7;color:#b9203d;animation:micpulse 1.2s infinite alternate}
+@keyframes micpulse{to{background:#ffd0da}}
+.heard{font-size:20px;min-height:28px;margin-top:6px;font-weight:500}
+.waves{display:inline-flex;gap:3px;align-items:center;height:22px;vertical-align:middle;margin-right:6px}
+.waves i{display:block;width:5px;border-radius:3px;background:var(--bad);animation:wv .6s infinite alternate}
+.waves i:nth-child(2){animation-delay:.1s}.waves i:nth-child(3){animation-delay:.2s}.waves i:nth-child(4){animation-delay:.3s}.waves i:nth-child(5){animation-delay:.4s}
+@keyframes wv{from{height:5px}to{height:22px}}
+.typebox{max-width:560px;margin:16px auto 0}
+.typebox input{width:100%;font-family:inherit;font-size:26px;padding:14px 16px;border-radius:18px;border:3px solid #e7dfcf;outline:none;background:#fffdf8;color:var(--ink);text-align:center}
+.typebox input:focus{border-color:var(--ink)}
+.typebox input::placeholder{font-size:18px;color:#b3aac8}
+.typebox .kbhint{font-size:16px;color:var(--muted);margin-top:8px}
+.timer{position:relative;width:130px;height:130px;margin:14px auto 6px}
+.timer svg{transform:rotate(-90deg)}
+.timer .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:700}
+.timer.urgent .num{color:var(--bad)}
+
+.hours{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px}
+.hours button{background:#fff;border-radius:12px;padding:9px 13px;font-size:18px;font-weight:600;box-shadow:0 3px 0 var(--line);min-width:46px}
+.hours button.sel{background:var(--ink);color:#fff}
+.tlist{display:flex;flex-direction:column;gap:8px}
+.trow{background:#fff;border-radius:16px;padding:8px 12px;display:grid;grid-template-columns:74px 1fr 1fr auto;gap:10px;align-items:center;box-shadow:0 3px 0 var(--line);text-align:left}
+.trow .dg{font-size:13px;color:var(--muted);text-align:center;font-weight:600}
+.trow .en{font-size:20px;font-weight:600;background:#f8f4ec;border-radius:12px;padding:8px 10px;text-align:left}
+.trow .esl{font-size:16px;color:var(--muted);background:none;text-align:left;padding:6px}
+.spk{background:#f1ebdf;border-radius:12px;padding:8px 10px;font-size:18px}
+
+.stars{font-size:64px;letter-spacing:6px;margin:6px 0}
+.endmsg{font-size:26px;font-weight:700;margin:4px 0}
+.unlock{font-size:19px;font-weight:600;color:#1b5fbd;min-height:24px;margin:6px 0}
+.missed{margin-top:16px;text-align:left}
+.missed h3{margin:0 0 8px}
+.confetti{position:fixed;top:-20px;font-size:26px;pointer-events:none;animation:fall 1.6s linear forwards;z-index:9}
+@keyframes fall{to{transform:translateY(105vh) rotate(360deg);opacity:.7}}
+
+@media (max-width:560px){
+  .trow{grid-template-columns:60px 1fr auto}
+  .trow .esl{grid-column:2/3}
+  .row .lbl{min-width:100%}
+  .choices{gap:8px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<section id="home" class="screen on">
+  <div class="hero">
+    <div class="clockbox" id="heroClock" style="width:150px;margin:0"></div>
+    <div>
+      <h1>🕘 What time is it?</h1>
+      <p>Aprende a decir la hora en inglés británico</p>
+      <button class="now" id="nowBtn" title="Escuchar">Ahora son… <b id="nowTxt"></b> 🔊</button>
+    </div>
+  </div>
+  <div class="legend">
+    <span class="tag t-oc">en punto → o'clock</span>
+    <span class="tag t-past">hasta la media → past + la hora que es</span>
+    <span class="tag t-to">después de la media → to + la hora siguiente</span>
+  </div>
+
+  <h2 class="sect">🗺️ Mi camino</h2>
+  <div class="players" id="players"></div>
+  <div id="path"></div>
+
+  <h2 class="sect" style="margin-top:30px">🎮 Juego libre</h2>
+  <div class="modes" id="freeModes"></div>
+  <p class="note" id="micNote" style="text-align:left"></p>
+
+  <div class="panel">
+    <h2>⚙️ Ajustes</h2>
+    <p class="note" style="text-align:left;margin:0 0 6px">«Preguntas» y «Horas» solo cuentan en el juego libre: el camino elige sus horas.</p>
+    <div class="row"><span class="lbl">Preguntas</span>
+      <div class="seg" data-set="n"><button data-v="10">10</button><button data-v="20">20</button></div></div>
+    <div class="row"><span class="lbl">Horas</span>
+      <div class="seg" data-set="easy"><button data-v="all">Todas (de 5 en 5)</button><button data-v="easy">Fáciles: en punto, y media, y cuarto, menos cuarto</button></div></div>
+    <div class="row"><span class="lbl">Voz</span>
+      <div class="seg" data-set="voice">
+        <button data-v="rec">🎙️ Emma (va en todos los aparatos)</button>
+        <button data-v="c:buttery" class="cvoice" hidden>🎙️ Claude 1</button><button data-v="c:airy" class="cvoice" hidden>🎙️ Claude 2</button><button data-v="c:glassy" class="cvoice" hidden>🎙️ Claude 3</button><button data-v="c:rounded" class="cvoice" hidden>🎙️ Claude 4</button>
+        <button data-v="browser">🌐 Voz del navegador</button>
+      </div></div>
+    <div class="row"><span class="lbl">Velocidad</span>
+      <div class="seg" data-set="rate"><button data-v="0.85">🐢 lenta</button><button data-v="1">🐇 normal</button></div></div>
+    <div class="row" id="row-kb"><span class="lbl">Sin micrófono</span>
+      <div class="seg" data-set="kb"><button data-v="on">⌨️ dictar con el 🎤 del teclado</button><button data-v="off">✅ me corrijo yo</button></div></div>
+    <div class="row" id="row-mic" hidden><span class="lbl">Micrófono</span>
+      <div class="seg" data-set="mic"><button data-v="on">🎤 sí, que me escuche</button><button data-v="off">no, me corrijo yo</button></div></div>
+    <div class="row"><span class="lbl">Sonidos</span>
+      <div class="seg" data-set="sfx"><button data-v="on">🔔 sí</button><button data-v="off">🔕 no</button></div></div>
+    <div class="row"><span class="lbl">Tiempo para pensar</span>
+      <div class="seg" data-set="secs"><button data-v="3">3 s</button><button data-v="5">5 s</button><button data-v="8">8 s</button><button data-v="12">12 s</button></div></div>
+    <div class="row"><button class="btn small" id="testVoice">🔊 Probar la voz: quarter to ten</button></div>
+    <p class="note" style="text-align:left" id="voiceNote"></p>
+  </div>
+</section>
+
+<!-- GAME -->
+<section id="game" class="screen">
+  <div class="bar"><button class="back" data-home>← Menú</button><div class="prog"><i id="g-prog"></i></div><div class="score" id="g-score">⭐ 0</div></div>
+  <div class="stage">
+    <p class="ask" id="g-ask"></p>
+    <div id="g-main"></div>
+    <div id="g-tip"></div>
+    <div id="g-choices"></div>
+
+    <div id="g-prompt" style="display:none">
+      <div class="btns" style="margin-top:20px"><button class="btn go big-mic" id="g-go">🎤 ¡Ahora tú!</button></div>
+      <div class="note" id="g-spacenote">o pulsa la barra espaciadora</div>
+      <div class="btns"><button class="btn small" id="g-rep">🔊 Escuchar otra vez</button></div>
+    </div>
+
+    <div id="g-type" style="display:none" class="typebox">
+      <input id="g-in" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Toca aquí y luego el 🎤 del teclado">
+      <div class="kbhint" id="g-kbhint"></div>
+      <div class="btns"><button class="btn go" id="g-tcheck">Comprobar ✔</button><button class="btn small" id="g-rep2">🔊 Escuchar otra vez</button></div>
+    </div>
+    <div id="g-think" style="display:none">
+      <div class="timer" id="g-timer">
+        <svg width="130" height="130"><circle cx="65" cy="65" r="55" stroke="#f0e7d6" stroke-width="12" fill="none"/>
+          <circle id="g-ring" cx="65" cy="65" r="55" stroke="#ffc23c" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="345.6" stroke-dashoffset="0"/></svg>
+        <div class="num" id="g-num">5</div>
+      </div>
+      <div class="mic" id="g-mic" style="display:none"><span id="g-mic-t">🎤 Te escucho…</span><div class="heard" id="g-heard"></div></div>
+      <div class="btns"><button class="btn small" id="g-skip">Ya lo he dicho →</button></div>
+    </div>
+
+    <div id="g-reveal" style="display:none">
+      <div class="feedback" id="g-result"></div>
+      <div id="g-answer"></div>
+      <div id="g-self" style="display:none">
+        <p class="ask" style="margin-top:14px">¿Lo has dicho bien?</p>
+        <div class="btns"><button class="btn ok" id="g-yes">✅ ¡Sí!</button><button class="btn bad" id="g-no">🔁 No, repetir luego</button></div>
+      </div>
+      <div id="g-auto" style="display:none">
+        <div class="btns">
+          <button class="btn go" id="g-next">Siguiente →</button>
+          <button class="btn small" id="g-retry">🎤 Probar otra vez</button>
+          <button class="btn small" id="g-override">🙋 ¡Lo dije bien! No me entendió</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TABLE -->
+<section id="table" class="screen">
+  <div class="bar"><button class="back" data-home>← Menú</button><div style="flex:1;font-weight:700;font-size:20px">📋 Todas las horas</div></div>
+  <div class="hours" id="tb-hours"></div>
+  <div class="tlist" id="tb-body"></div>
+</section>
+
+<!-- END -->
+<section id="end" class="screen">
+  <div class="stage">
+    <div class="stars" id="en-stars">⭐⭐⭐</div>
+    <div class="endmsg" id="en-msg">¡Genial!</div>
+    <div class="unlock" id="en-unlock"></div>
+    <p class="sub" id="en-score"></p>
+    <div class="missed" id="en-missed"></div>
+    <div class="btns">
+      <button class="btn go" id="en-path" style="display:none">🗺️ Seguir el camino</button>
+      <button class="btn go" id="en-again">🔁 Jugar otra vez</button>
+      <button class="btn dark" data-home>🏠 Menú</button>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+/* =================== HELPERS =================== */
+const $=id=>document.getElementById(id);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const store={
+  get(k,d){try{const v=localStorage.getItem("clk_"+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("clk_"+k,JSON.stringify(v))}catch(e){}}
+};
+const H12=x=>((x-1)%12+12)%12+1;           // 0 -> 12, 13 -> 1
+const key=(h,m)=>h+":"+m;
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+/* =================== TIMES & PHRASES =================== */
+const MINS=[0,5,10,15,20,25,30,35,40,45,50,55];
+const EASY=[0,15,30,45];
+const EN_NUM=["","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
+const ES_NUM=["","una","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez","once","doce"];
+const MIN_EN={5:"five",10:"ten",15:"quarter",20:"twenty",25:"twenty-five",30:"half"};
+const MIN_ES={5:"cinco",10:"diez",15:"cuarto",20:"veinte",25:"veinticinco",30:"media"};
+function parts(h,m){
+  if(m===0)return{type:"oc",min:0,hour:h};
+  if(m<=30)return{type:"past",min:m,hour:h};
+  return{type:"to",min:60-m,hour:H12(h+1)};
+}
+function phraseEN(h,m){const p=parts(h,m);if(p.type==="oc")return EN_NUM[h]+" o'clock";return MIN_EN[p.min]+(p.type==="past"?" past ":" to ")+EN_NUM[p.hour];}
+function htmlEN(h,m){const p=parts(h,m);
+  if(p.type==="oc")return EN_NUM[h]+' <span class="oc">o\'clock</span>';
+  return MIN_EN[p.min]+(p.type==="past"?' <span class="past">past</span> ':' <span class="to">to</span> ')+EN_NUM[p.hour];}
+function phraseES(h,m){const p=parts(h,m);const hh=p.hour;
+  const tail=p.type==="oc"?"en punto":(p.type==="past"?"y ":"menos ")+MIN_ES[p.min];
+  return (hh===1?"Es la ":"Son las ")+ES_NUM[hh]+" "+tail;}
+function htmlES(h,m){const p=parts(h,m);const hh=p.hour;
+  const tail=p.type==="oc"?'<span class="oc">en punto</span>':p.type==="past"?'<span class="past">y '+MIN_ES[p.min]+'</span>':'<span class="to">menos '+MIN_ES[p.min]+'</span>';
+  return (hh===1?"Es la ":"Son las ")+ES_NUM[hh]+" "+tail;}
+const digital=(h,m)=>h+":"+String(m).padStart(2,"0");
+function tipFor(h,m){
+  const p=parts(h,m);
+  if(p.type==="oc")return `💡 En punto se dice <b class="oc">o'clock</b>: ${EN_NUM[h]} o'clock.`;
+  if(m===30)return `💡 Y media = <b class="past">half past</b> + la hora que es: half past ${EN_NUM[h]}.`;
+  if(m===15)return `💡 Y cuarto = <b class="past">quarter past</b> + la hora que es.`;
+  if(m===45)return `💡 Menos cuarto = <b class="to">quarter to</b> + <b>la hora siguiente</b> (como en español: ${phraseES(h,m).toLowerCase()}).`;
+  if(p.type==="past")return `💡 Hasta la media se dice <b class="past">past</b> + la hora que es.`;
+  return `💡 Después de la media se dice <b class="to">to</b> y <b>la hora siguiente</b>: ${digital(h,m)} = ${phraseEN(h,m)}.`;
+}
+
+/* =================== ANALOG CLOCK (SVG) =================== */
+// coloured slice from the 12 to the minute hand (past: what has passed) or from the hand to the 12 (to: what is left)
+function arcPath(m){
+  if(!m)return "";const R=86,a=m*6*Math.PI/180,x=(100+Math.sin(a)*R).toFixed(1),y=(100-Math.cos(a)*R).toFixed(1);
+  return m<=30?`M100 100 L100 ${100-R} A${R} ${R} 0 0 1 ${x} ${y} Z`:`M100 100 L${x} ${y} A${R} ${R} 0 0 1 100 ${100-R} Z`;
+}
+const arcFill=m=>m>30?"#ff7a45":"#2f86f6";
+const RING={1:"5",2:"10",3:"¼",4:"20",5:"25",6:"½",7:"25",8:"20",9:"¼",10:"10",11:"5"};
+function clockSVG(h,m,o){
+  o=o||{};
+  const C=100,R=92;let s=`<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="reloj"${o.arc?' data-arc="1"':""}>`;
+  s+=`<circle cx="100" cy="100" r="${R+5}" fill="#2b2350"/><circle cx="100" cy="100" r="${R}" fill="#fff"/>`;
+  if(o.tint!==false){
+    s+=`<path d="M100 100 L100 ${C-R} A${R} ${R} 0 0 1 100 ${C+R} Z" fill="#dcebff" opacity=".75"/>`;
+    s+=`<path d="M100 100 L100 ${C+R} A${R} ${R} 0 0 1 100 ${C-R} Z" fill="#ffe6da" opacity=".75"/>`;
+  }
+  s+=`<path class="arc" d="${o.arc?arcPath(m):""}" fill="${arcFill(m)}" opacity=".38"/>`;
+  for(let i=0;i<60;i++){const a=i*6*Math.PI/180,big=i%5===0;const r1=big?R-9:R-5;
+    s+=`<line x1="${(C+Math.sin(a)*r1).toFixed(1)}" y1="${(C-Math.cos(a)*r1).toFixed(1)}" x2="${(C+Math.sin(a)*(R-1)).toFixed(1)}" y2="${(C-Math.cos(a)*(R-1)).toFixed(1)}" stroke="#2b2350" stroke-width="${big?2.6:1}" opacity="${big?.9:.45}"/>`;}
+  for(let n=1;n<=12;n++){const a=n*30*Math.PI/180,r=R-23;
+    s+=`<text x="${(C+Math.sin(a)*r).toFixed(1)}" y="${(C-Math.cos(a)*r+7).toFixed(1)}" font-size="21" font-weight="700" fill="#2b2350" text-anchor="middle" font-family="Fredoka,sans-serif">${n}</text>`;
+    if(o.ring&&n<12){const r2=R-45;s+=`<text x="${(C+Math.sin(a)*r2).toFixed(1)}" y="${(C-Math.cos(a)*r2+5).toFixed(1)}" font-size="13" font-weight="700" fill="${n<=6?"#1b5fbd":"#c94d1c"}" text-anchor="middle" font-family="Fredoka,sans-serif">${RING[n]}</text>`;}
+  }
+  s+=`<g class="hh" transform="rotate(${(h%12)*30+m*.5} 100 100)"><line x1="100" y1="112" x2="100" y2="52" stroke="#e11d48" stroke-width="9" stroke-linecap="round"/></g>`;
+  s+=`<g class="mh" transform="rotate(${m*6} 100 100)"><line x1="100" y1="114" x2="100" y2="34" stroke="#2b2350" stroke-width="5" stroke-linecap="round"/></g>`;
+  s+=`<circle cx="100" cy="100" r="6.5" fill="#ffc23c" stroke="#2b2350" stroke-width="2"/></svg>`;
+  return s;
+}
+function setHands(svg,h,m){
+  svg.querySelector(".hh").setAttribute("transform",`rotate(${(h%12)*30+m*.5} 100 100)`);
+  svg.querySelector(".mh").setAttribute("transform",`rotate(${m*6} 100 100)`);
+  const a=svg.querySelector(".arc");if(a&&svg.dataset.arc){a.setAttribute("d",arcPath(m));a.setAttribute("fill",arcFill(m));}
+}
+function makeDraggable(box,start){
+  const st={h:start.h,m:start.m};
+  const svg=box.querySelector("svg");
+  let grab=null;
+  const ang=e=>{const r=svg.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*200-100,y=(e.clientY-r.top)/r.height*200-100;
+    return{a:(Math.atan2(x,-y)*180/Math.PI+360)%360,r:Math.hypot(x,y)};};
+  const diff=(a,b)=>{const d=Math.abs(a-b)%360;return d>180?360-d:d;};
+  svg.addEventListener("pointerdown",e=>{
+    e.preventDefault();
+    const p=ang(e);const ma=st.m*6,ha=(st.h%12)*30+st.m*.5;
+    const dm=diff(p.a,ma),dh=diff(p.a,ha);
+    if(dm<28&&dh<28)grab=p.r<58?"h":"m"; else grab=dm<=dh?"m":"h";
+    try{svg.setPointerCapture(e.pointerId)}catch(_){}
+    move(e);
+  });
+  const move=e=>{
+    if(!grab)return;
+    const p=ang(e);
+    if(grab==="m"){
+      const nm=(Math.round(p.a/30)*5)%60;
+      if(nm!==st.m){
+        if(st.m>=45&&nm<=15)st.h=H12(st.h+1);
+        else if(st.m<=15&&nm>=45)st.h=H12(st.h-1);
+        st.m=nm;
+      }
+    }else{
+      st.h=H12(Math.round(((p.a-st.m*.5)+360)%360/30)||12);
+    }
+    setHands(svg,st.h,st.m);
+  };
+  svg.addEventListener("pointermove",move);
+  const end=()=>{grab=null};
+  svg.addEventListener("pointerup",end);svg.addEventListener("pointercancel",end);
+  return st;
+}
+
+/* =================== UNDERSTANDING WHAT THEY SAY (ENGLISH) =================== */
+const NUMW={one:1,won:1,two:2,three:3,tree:3,free:3,four:4,for:4,fore:4,five:5,fife:5,six:6,seven:7,eight:8,ate:8,nine:9,nein:9,ten:10,eleven:11,twelve:12,
+  fifteen:15,twenty:20,thirty:30,forty:40,fourty:40,fifty:50,oh:0,zero:0,
+  twentyfive:25,twentyfives:25};
+const KW={quarter:"q",quarters:"q",quarta:"q",quater:"q",quartor:"q",court:"q",courts:"q",water:"q",waters:"q",quota:"q",quarte:"q",
+  half:"half",have:"half",halve:"half",harf:"half",hav:"half",huff:"half",halves:"half",
+  past:"past",passed:"past",pass:"past",paste:"past",pest:"past",parse:"past",pasta:"past",passt:"past",paast:"past",
+  after:"after",till:"till",til:"till",until:"till",before:"till",of:"till",
+  oclock:"oc",clock:"oc",oclocks:"oc",clocks:"oc",
+  noon:"noon",midday:"noon",midnight:"noon"};
+const TOLIKE=new Set(["to","two","too","2","tu","tew","toe"]);
+function tokensEN(text){
+  let t=" "+String(text||"").toLowerCase().replace(/[’‘`´]/g,"'")+" ";
+  t=t.replace(/(\d{1,2})\s*[:.]\s*(\d{2})/g," dg$1x$2 ");
+  t=t.replace(/o\s*'\s*clock|o\s+clock|\ba\s+clock|\boclock/g," oclock ");
+  t=t.replace(/¼|1\/4/g," quarter ").replace(/½|1\/2/g," half ");
+  t=t.replace(/-/g," ").replace(/[^a-z0-9 ]+/g," ");
+  return t.split(/\s+/).filter(Boolean);
+}
+function altsOf(w){
+  let r;
+  if((r=/^dg(\d+)x(\d+)$/.exec(w))){let h=+r[1];const m=+r[2];if(h>12)h-=12;if(h===0)h=12;return h>=1&&h<=12&&m<60?[[{t:"dig",h,m}]]:[];}
+  if((r=/^(\d+)(am|pm)$/.exec(w)))w=r[1];
+  if(TOLIKE.has(w))return[[{t:"to"}],[{t:"num",v:2}]];
+  if(/^\d+$/.test(w)){const v=+w;
+    if(v<60)return[[{t:"num",v}]];
+    if(w.length>=3&&w.length<=4){const h=Math.floor(v/100),m=v%100;if(h>=1&&h<=12&&m<60)return[[{t:"dig",h,m}]];}
+    return[];}
+  if(w in NUMW)return[[{t:"num",v:NUMW[w]}]];
+  if(KW[w])return[[{t:KW[w]}]];
+  return[];          // filler: it's, a, the, minutes, um...
+}
+function mergeNums(seq){
+  const out=[];
+  for(let i=0;i<seq.length;i++){const x=seq[i],y=seq[i+1];
+    if(x.t==="num"&&[20,30,40,50].includes(x.v)&&y&&y.t==="num"&&y.v>=1&&y.v<=9){out.push({t:"num",v:x.v+y.v});i++;}
+    else out.push(x);}
+  return out;
+}
+// returns a list of {h,m,k}: k = "ok" (British form), "dig" (nine forty-five), "us" (quarter after / of...)
+function parseEN(text){
+  const toks=tokensEN(text);
+  let variants=[[]];
+  toks.forEach(w=>{const al=altsOf(w);if(!al.length)return;
+    const nv=[];variants.forEach(v=>al.forEach(a=>nv.push(v.concat(a))));variants=nv.slice(0,64);});
+  const res=[];const add=(h,m,k)=>{if(h>=1&&h<=12&&m>=0&&m<60&&m%5===0&&!res.some(r=>r.h===h&&r.m===m&&r.k===k))res.push({h,m,k});};
+  const isHour=x=>x&&x.t==="num"&&x.v>=1&&x.v<=12;
+  const linkW=x=>x&&["past","after","to","till"].includes(x.t);
+  variants.forEach(v=>{
+    const s=mergeNums(v);
+    const kws=s.filter(x=>x.t!=="num").length;
+    if(s.length===1&&isHour(s[0]))add(s[0].v,0,"ok");          // "nine" alone
+    for(let i=0;i<s.length;i++){
+      const p=s[i-1],x=s[i],y=s[i+1],z=s[i+2];
+      let M=null,good=true;
+      if(x.t==="q")M=15;else if(x.t==="half")M=30;
+      else if(x.t==="num"&&[5,10,20,25].includes(x.v))M=x.v;
+      else if(x.t==="num"&&[15,30].includes(x.v)){M=x.v;good=false;}
+      if(M!==null&&y&&(y.t==="past"||y.t==="after")&&isHour(z))add(z.v,M,good&&y.t==="past"?"ok":"us");
+      if(M!==null&&M<30&&y&&(y.t==="to"||y.t==="till")&&isHour(z))add(H12(z.v-1),60-M,good&&y.t==="to"?"ok":"us");
+      if(isHour(x)&&y&&y.t==="oc"&&!s.some(q=>linkW(q)||q.t==="q"||q.t==="half"))add(x.v,0,"ok");
+      if(x.t==="half"&&isHour(y)&&!(z&&z.t==="num"))add(y.v,30,"ok");     // "half nine"
+      if(isHour(x)&&!linkW(p)&&y&&y.t==="num"){
+        if(y.v===0&&z&&z.t==="num"&&z.v>=1&&z.v<=9)add(x.v,z.v,"dig");
+        else if(y.v>=5&&y.v<=55)add(x.v,y.v,"dig");
+      }
+      if(x.t==="dig")add(x.h,x.m,x.m===0?"ok":"dig");
+      if(x.t==="noon")add(12,0,"ok");
+    }
+  });
+  return res;
+}
+function judgeEN(text,h,m){
+  const r=parseEN(text).filter(x=>x.h===h&&x.m===m);
+  if(r.some(x=>x.k==="ok"))return"ok";
+  if(r.length)return"almost";
+  return"bad";
+}
+
+/* =================== UNDERSTANDING WHAT THEY SAY (SPANISH) =================== */
+const ESN={una:1,uno:1,un:1,dos:2,tres:3,cuatro:4,cinco:5,seis:6,siete:7,ocho:8,nueve:9,diez:10,once:11,doce:12,
+  quince:15,veinte:20,veinticinco:25,treinta:30,treintaicinco:35,cuarenta:40,cuarentaicinco:45,cincuenta:50,cincuentaicinco:55};
+function tokensES(text){
+  let t=" "+String(text||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")+" ";
+  t=t.replace(/(\d{1,2})\s*[:.]\s*(\d{2})/g," dg$1x$2 ");
+  t=t.replace(/¼|1\/4/g," cuarto ").replace(/½|1\/2/g," media ");
+  t=t.replace(/veinti\s+cinco/g,"veinticinco").replace(/(treinta|cuarenta|cincuenta) y cinco/g,"$1icinco");
+  t=t.replace(/[^a-z0-9 ]+/g," ");
+  const out=[];
+  t.split(/\s+/).filter(Boolean).forEach(w=>{let r;
+    if((r=/^dg(\d+)x(\d+)$/.exec(w))){let h=+r[1];if(h>12)h-=12;if(h===0)h=12;out.push({t:"dig",h,m:+r[2]});return;}
+    if(/^\d+$/.test(w)){out.push({t:"num",v:+w});return;}
+    if(w in ESN){out.push({t:"num",v:ESN[w]});return;}
+    if(["y","menos","cuarto","media","punto"].includes(w))out.push({t:w});
+  });
+  return out;
+}
+function parseES(text){
+  const s=tokensES(text),res=[];
+  const add=(h,m)=>{if(h>=1&&h<=12&&m>=0&&m<60&&!res.some(r=>r.h===h&&r.m===m))res.push({h,m});};
+  const isHour=x=>x&&x.t==="num"&&x.v>=1&&x.v<=12;
+  const nums=s.filter(x=>x.t==="num").length,ops=s.filter(x=>x.t==="y"||x.t==="menos").length;
+  for(let i=0;i<s.length;i++){
+    const x=s[i],y=s[i+1],z=s[i+2];
+    if(x.t==="dig")add(x.h,x.m);
+    if(!isHour(x))continue;
+    if(y&&y.t==="y"&&z){const M=z.t==="cuarto"?15:z.t==="media"?30:(z.t==="num"&&z.v%5===0&&z.v<60?z.v:null);if(M!==null)add(x.v,M);}
+    if(y&&y.t==="menos"&&z){const M=z.t==="cuarto"?15:(z.t==="num"&&z.v%5===0&&z.v<=30?z.v:null);if(M!==null)add(H12(x.v-1),60-M);}
+    if(y&&y.t==="punto")add(x.v,0);
+    if(y&&y.t==="num"&&y.v>=5&&y.v<=55&&y.v%5===0)add(x.v,y.v);
+    if(nums===1&&ops===0)add(x.v,0);
+  }
+  return res;
+}
+const judgeES=(text,h,m)=>parseES(text).some(x=>x.h===h&&x.m===m)?"ok":"bad";
+
+/* =================== SETTINGS =================== */
+const S=Object.assign({kb:"on",n:"10",easy:"all",voice:"rec",rate:"1",sfx:"on",mic:"on",secs:"5"},store.get("settings",{}));
+document.querySelectorAll(".seg[data-set]").forEach(seg=>{
+  const k=seg.dataset.set;
+  const paint=()=>seg.querySelectorAll("button").forEach(b=>b.classList.toggle("sel",b.dataset.v===S[k]));
+  seg.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S[k]=b.dataset.v;store.set("settings",S);paint();
+    if(k==="voice"||k==="rate")out([{text:"Quarter to ten."}]);});
+  seg._paint=paint;paint();
+});
+
+function allSpeech(){
+  const L=[];const add=(text,lang)=>{if(!L.some(x=>x.text===text&&x.lang===lang))L.push({text,lang});};
+  for(let h=1;h<=12;h++)for(const m of MINS){add(cap(phraseEN(h,m))+".","en");add(phraseES(h,m)+".","es");}
+  PRAISE.forEach(t=>add(t,"en"));
+  ["Oops!","Almost!","Great job!","What time is it?","Yeah! You are a champion!","Well done!","Keep practising! You can do it!","Quarter to ten."].forEach(t=>add(t,"en"));
+  LESSONS.forEach(u=>u.forEach(c=>c.say.forEach(it=>add(it.text,it.lang==="es"?"es":"en"))));
+  return L;
+}
+/* =================== SOUND EFFECTS =================== */
+let AC=null,keepAlive=null;
+// Speakers and tablets switch their audio output off when nothing plays, and cut the first word when it wakes up.
+// A silent tone keeps the output awake, so every sentence starts complete.
+function wakeAudio(){
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==="suspended")AC.resume();
+    if(typeof player!=="undefined"&&!player._unlocked){player._unlocked=true;try{player.src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=";const p=player.play();if(p&&p.catch)p.catch(()=>{});}catch(e){}}
+    try{if(navigator.audioSession)navigator.audioSession.type="playback";}catch(e){}
+    if(!keepAlive){const o=AC.createOscillator(),g=AC.createGain();g.gain.value=0.0001;o.frequency.value=30;o.connect(g);g.connect(AC.destination);o.start();keepAlive=o;}
+  }catch(e){}
+}
+["pointerdown","keydown","touchend"].forEach(ev=>document.addEventListener(ev,wakeAudio,{capture:true,passive:true}));
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&AC&&AC.state!=="running"){try{AC.resume()}catch(e){}}});
+function beep(f,d,type,vol){if(S.sfx!=="on")return;try{wakeAudio();
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(vol||.15,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){}}
+const sfxGood=()=>{beep(660,.12);setTimeout(()=>beep(880,.18),110)};
+const sfxBad=()=>beep(220,.25,"triangle",.2);
+const sfxTick=()=>beep(520,.08,"square",.06);
+function burst(n){const em=["🎉","⭐","✨","🎈","🌟","⏰"];for(let i=0;i<n;i++){const s=document.createElement("div");s.className="confetti";s.textContent=pick(em);
+  s.style.left=Math.random()*100+"vw";s.style.animationDelay=(Math.random()*.4)+"s";document.body.appendChild(s);setTimeout(()=>s.remove(),2200);}}
+
+/* =================== VOICE (Claude tts, browser fallback) =================== */
+let TTS=null,DICT=null,ttsState="idle",dictState="idle",speakToken=0;
+const synth=window.speechSynthesis||null;
+const useClaude=()=>!!TTS&&S.voice.startsWith("c:");
+function pickVoice(lang){try{const vs=synth.getVoices();const L=lang.toLowerCase();
+  const ex=vs.filter(v=>(v.lang||"").replace("_","-").toLowerCase()===L),any=vs.filter(v=>(v.lang||"").toLowerCase().startsWith(L.slice(0,2)));
+  const l=ex.length?ex:any;return l.find(v=>/natural|enhanced|premium|google/i.test(v.name))||l[0]||null;}catch(e){return null}}
+function ttsSeq(items,tok,tries){
+  tries=tries||0;
+  const lines=items.map((it,i)=>({text:it.text,id:"l"+i,language:it.lang||"en",rate:it.praise?1:+S.rate}));
+  return TTS.speak(lines,{voice:S.voice.slice(2)}).catch(e=>{
+    const c=e&&e.code;
+    if((c==="busy"||c==="rate_limited"||c==="upstream_error")&&tries<6&&tok===speakToken)
+      return wait(c==="busy"?350:800).then(()=>tok===speakToken?ttsSeq(items,tok,tries+1):null);
+    if(c==="not_granted"){TTS=null;applyCaps();}
+  });
+}
+function synthSeq(items,tok){
+  return new Promise(res=>{
+    if(!synth||!items.length)return res();
+    let busy=false;try{busy=synth.speaking||synth.pending;if(busy)synth.cancel();}catch(e){}
+    setTimeout(()=>{
+      if(tok!==speakToken)return res();
+      try{const w=new SpeechSynthesisUtterance(".");w.volume=0;w.rate=2;w.lang="en-GB";synth.speak(w);}catch(e){}
+      items.forEach((it,i)=>{const u=new SpeechSynthesisUtterance(it.text);u.lang=it.lang==="es"?"es-ES":"en-GB";
+        const v=pickVoice(u.lang);if(v)u.voice=v;u.rate=(+S.rate)*.95;
+        if(i===items.length-1)u.onend=u.onerror=()=>res();try{synth.speak(u)}catch(e){res()}});
+    },busy?250:30);
+    setTimeout(res,3000+items.length*1500);
+  });
+}
+/* ---- recorded voice: every sentence of the game, recorded once, works on any device ---- */
+const REC={en:null,es:null},BLOB={};
+["en","es"].forEach(l=>fetch("audio_"+l+".json").then(r=>r.ok?r.json():null).then(j=>{if(j)REC[l]=j;}).catch(()=>{}));
+const recKey=it=>((it.lang==="es")?"es":"en");
+const recHas=it=>{const b=REC[recKey(it)];return !!(b&&b[it.text.trim()]);};
+function recURL(it){
+  const k=recKey(it)+"|"+it.text.trim();if(BLOB[k])return BLOB[k];
+  const b64=REC[recKey(it)][it.text.trim()],bin=atob(b64),u=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  return BLOB[k]=URL.createObjectURL(new Blob([u],{type:"audio/mpeg"}));
+}
+const player=new Audio();player.preload="auto";
+function playOne(src,rate){
+  return new Promise(res=>{
+    let done=false;const fin=()=>{if(!done){done=true;res();}};
+    player.onended=fin;player.onerror=fin;player.src=src;player.playbackRate=rate;
+    try{player.preservesPitch=true;player.webkitPreservesPitch=true;}catch(e){}
+    const p=player.play();if(p&&p.catch)p.catch(fin);
+    setTimeout(fin,12000);
+  });
+}
+async function recSeq(items,tok){
+  for(const it of items){
+    if(tok!==speakToken)return;
+    await playOne(recURL(it),it.praise?1:(S.rate==="0.85"?0.85:1));
+    if(tok!==speakToken)return;
+    await wait(120);
+  }
+}
+const useRec=items=>!useClaude()&&S.voice!=="browser"&&items.every(recHas);
+function out(items){
+  const tok=++speakToken;
+  wakeAudio();
+  if(useClaude()){try{synth&&synth.speaking&&synth.cancel()}catch(e){}}
+  try{player.pause()}catch(e){}
+  if(useClaude())return Promise.race([ttsSeq(items,tok),wait(9000)]);
+  if(useRec(items))return recSeq(items,tok);
+  return synthSeq(items,tok);
+}
+const sayEN=(h,m)=>out([{text:cap(phraseEN(h,m))+"."}]);
+const sayES=(h,m)=>out([{text:phraseES(h,m)+".",lang:"es"}]);
+function stopVoice(){speakToken++;try{player.pause()}catch(e){}try{synth&&synth.cancel()}catch(e){}try{if(TTS&&ttsState!=="idle")TTS.stop().catch(()=>{})}catch(e){}}
+const PRAISE=["Awesome!","Great job!","Yeah!","Super!","Well done!","Fantastic!","Brilliant!"];
+function applyCaps(){
+  document.querySelectorAll(".cvoice").forEach(b=>b.hidden=!TTS);
+  $("row-mic").hidden=!DICT;
+  if(!TTS&&S.voice.startsWith("c:")){/* show browser voice as selected without overwriting the saved choice */
+    document.querySelectorAll('.seg[data-set="voice"] button').forEach(b=>b.classList.toggle("sel",b.dataset.v==="rec"));}
+  else document.querySelector('.seg[data-set="voice"]')._paint();
+  $("voiceNote").textContent=TTS?"":"ℹ️ Las voces de Claude solo aparecen en Chrome/Edge con tu cuenta de Claude. Emma funciona en todos los aparatos.";
+  $("micNote").textContent=DICT?"":"🎤 Para hablar se usa el micrófono del teclado del móvil, tablet u ordenador: toca la casilla y luego el 🎤 del teclado.";
+}
+// the browser's own speech recognition (Chrome, Edge, Safari on iPhone/iPad/Mac, Android) when the page runs on its own website
+function makeWebDict(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return null;
+  let rec=null,on=false,lastErr=null,stopRes=null;const h={};
+  const map={"not-allowed":"not_granted","service-not-allowed":"not_granted","no-speech":"no_speech","aborted":"stopped","audio-capture":"upstream_error","network":"upstream_error","language-not-supported":"unavailable"};
+  return{kind:"web",
+    start(opts){
+      return new Promise((res,rej)=>{
+        try{if(rec){try{rec.abort()}catch(e){}}}catch(e){}
+        try{
+          rec=new SR();rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=1;
+          rec.lang=(opts&&opts.language==="es")?"es-ES":"en-GB";
+          let started=false;
+          rec.onstart=()=>{started=true;on=true;h.state&&h.state({state:"listening"});res();};
+          rec.onresult=e=>{
+            const finals=[];let interim="";
+            for(let i=0;i<e.results.length;i++){
+              const r=e.results[i],t=(r[0]&&r[0].transcript||"").trim();if(!t)continue;
+              if(r.isFinal){const last=finals[finals.length-1];
+                if(last&&t.toLowerCase().startsWith(last.toLowerCase()))finals[finals.length-1]=t;else finals.push(t);}
+              else interim=t;
+            }
+            h.text&&h.text({text:(finals.join(" ")+" "+interim).trim()});
+          };
+          rec.onerror=ev=>{lastErr=map[ev.error]||"upstream_error";if(!started)rej({code:lastErr==="no_speech"?"stopped":lastErr});};
+          rec.onend=()=>{on=false;const r=lastErr||"stopped";lastErr=null;h.state&&h.state({state:"idle",reason:r});if(stopRes){stopRes();stopRes=null;}};
+          rec.start();
+        }catch(e){rej({code:"upstream_error"});}
+      });
+    },
+    stop(){return new Promise(r=>{if(!rec||!on){r();return;}stopRes=r;try{rec.stop()}catch(e){r();}setTimeout(r,1500);});},
+    onText(f){h.text=f},onState(f){h.state=f}
+  };
+}
+const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
+(async function loadCaps(){
+  if(inFrame)for(let i=0;i<50&&!(window.claude&&window.claude.use);i++)await wait(200);
+  if(window.claude&&window.claude.use){
+    try{TTS=await claude.use("tts")}catch(e){TTS=null}
+    try{DICT=await claude.use("dictation")}catch(e){DICT=null}
+  }
+  if(!DICT&&!inFrame)DICT=makeWebDict();
+  if(TTS)TTS.onState(({state})=>{ttsState=state;});
+  if(DICT){
+    DICT.onState(({state,reason})=>{dictState=state;
+      if(state==="idle"&&phase==="think"&&reason&&reason!=="stopped"){$("g-mic").className="mic";
+        $("g-mic-t").textContent=reason==="not_granted"?"🚫 El micrófono no tiene permiso":"🎤 El micro se ha parado — pulsa «Ya lo he dicho»";}});
+    if(DICT.kind==="web")DICT.onText(({text})=>{if(phase!=="think"&&phase!=="stopping")return;heard="";partial=text||"";if(text)lastSpeech=performance.now();showHeard();checkEarly();});
+    else{
+    DICT.onPartial(({text})=>{if(phase!=="think"&&phase!=="stopping")return;partial=text||"";if(text)lastSpeech=performance.now();showHeard();checkEarly();});
+    DICT.onFinal(({text})=>{if(phase!=="think"&&phase!=="stopping")return;heard+=" "+(text||"");partial="";lastSpeech=performance.now();showHeard();checkEarly();});
+    }
+  }
+  applyCaps();
+})();
+setTimeout(applyCaps,inFrame?11000:300);
+$("testVoice").addEventListener("click",()=>out([{text:"Quarter to ten."}]));
+
+/* =================== PLAYERS & PATH =================== */
+let PLAYERS=store.get("players",["Jugador 1","Jugador 2","Jugador 3"]);
+let PLAYER=store.get("player",0),editing=-1;
+const STEP_INFO={learn:{ico:"📖",name:"Aprende"},choice:{ico:"🎯",name:"Elige"},set:{ico:"🕘",name:"Pon la hora"},read:{ico:"🗣️",name:"Lee el reloj"},
+  trans:{ico:"🔤",name:"Tradúcelo"},toEs:{ico:"🤔",name:"¿Qué hora es?"},mix:{ico:"🏆",name:"Desafío"}};
+// The path goes step by step: o'clock → half past → quarter past/to → past → to → everything
+const UNITS=[
+  {ico:"🕐",name:"O'clock · en punto",sub:"three o'clock, eight o'clock…",mins:[0],review:[],steps:["learn","choice","set","read","mix"]},
+  {ico:"🕧",name:"Half past · y media",sub:"half past four…",mins:[30],review:[0],steps:["learn","choice","set","read","mix"]},
+  {ico:"🍕",name:"Quarter past · quarter to",sub:"y cuarto · menos cuarto",mins:[15,45],review:[0,30],steps:["learn","choice","set","read","mix"]},
+  {ico:"🔵",name:"Past: la mitad derecha",sub:"five past · ten past · twenty past · twenty-five past",mins:[5,10,20,25],review:[15,30],steps:["learn","choice","set","read","mix"]},
+  {ico:"🟠",name:"To: la mitad izquierda",sub:"twenty-five to · twenty to · ten to · five to",mins:[35,40,50,55],review:[45,5,10,20,25],steps:["learn","choice","set","read","mix"]},
+  {ico:"🏆",name:"Todas las horas",sub:"¡Ya sabes todo! Ahora a practicar mezclado",mins:MINS,review:[],steps:["learn","choice","set","read","trans","toEs","mix"]}
+];
+const BIG=t=>`<div class="lbig">${t}</div>`;
+const LESSONS=[
+  [{h:3,m:0,o:{},html:`⏰ El reloj tiene dos agujas.<br>La <b style="color:#e11d48">corta (roja)</b> marca la <b>hora</b>.<br>La <b>larga</b> marca los <b>minutos</b>.`,
+     say:[{text:"El reloj tiene dos agujas. La corta marca la hora. La larga marca los minutos.",lang:"es"}]},
+   {h:3,m:0,o:{},html:`Cuando la aguja <b>larga</b> está arriba, en el <b>12</b>, decimos <b class="oc">o'clock</b> (= en punto).${BIG(htmlEN(3,0))}= las tres en punto`,
+     say:[{text:"Cuando la aguja larga está en el doce, decimos",lang:"es"},{text:"o'clock."},{text:"Three o'clock."}]},
+   {h:8,m:0,o:{},html:`Mira la aguja <b style="color:#e11d48">corta</b>: está en el 8.<br>Número + <b class="oc">o'clock</b>:${BIG(htmlEN(8,0))}`,
+     say:[{text:"Mira la aguja corta, y di el número con",lang:"es"},{text:"o'clock."},{text:"Eight o'clock."}]}],
+  [{h:4,m:30,o:{arc:true},html:`Cuando la aguja larga baja hasta el <b>6</b>, ha pasado <b>media hora</b> (mira lo azul 🔵).<br>Decimos <b class="past">half past</b> (= y media).`,
+     say:[{text:"Cuando la aguja larga llega al seis, ha pasado media hora. Decimos",lang:"es"},{text:"half past."}]},
+   {h:4,m:30,o:{arc:true},html:`${BIG(htmlEN(4,30))}= las cuatro y media<br>La aguja corta está <b>entre el 4 y el 5</b>: usamos el número que ya ha <b>pasado</b>, el <b>4</b>.`,
+     say:[{text:"Half past four.",lang:"en"},{text:"La aguja corta está entre el cuatro y el cinco: usamos el cuatro.",lang:"es"}]}],
+  [{h:7,m:15,o:{arc:true},html:`Una hora es como una pizza 🍕 de 4 trozos: cada trozo es un <b>quarter</b> (un cuarto).<br>Aguja larga en el <b>3</b> → ha <b>pasado</b> un cuarto:${BIG(htmlEN(7,15))}= las siete y cuarto`,
+     say:[{text:"Una hora es como una pizza de cuatro trozos. Cada trozo es un",lang:"es"},{text:"quarter."},{text:"Aguja larga en el tres:",lang:"es"},{text:"quarter past."},{text:"Quarter past seven."}]},
+   {h:7,m:45,o:{arc:true},html:`Aguja larga en el <b>9</b> → <b>falta</b> un cuarto para la hora siguiente (mira lo naranja 🟠):<br>decimos <b class="to">quarter to</b> (= menos cuarto).`,
+     say:[{text:"Aguja larga en el nueve: falta un cuarto para la hora siguiente. Decimos",lang:"es"},{text:"quarter to."}]},
+   {h:7,m:45,o:{arc:true},html:`⚠️ ¡Ojo! Con <b class="to">to</b> decimos la hora <b>siguiente</b>, igual que en español:${BIG(htmlEN(7,45))}= las <b>ocho</b> menos cuarto (¡no las siete!)`,
+     say:[{text:"¡Ojo! Con",lang:"es"},{text:"to,"},{text:"decimos la hora siguiente, igual que en español: las ocho menos cuarto.",lang:"es"},{text:"Quarter to eight."}]}],
+  [{h:2,m:20,o:{ring:true,arc:true},html:`El reloj tiene dos mitades.<br>En la mitad <b class="past">derecha 🔵</b> decimos <b class="past">past</b>, como «<b>y</b>» en español: los minutos que ya han <b>pasado</b>.`,
+     say:[{text:"El reloj tiene dos mitades. En la mitad derecha, la azul, decimos",lang:"es"},{text:"past,"},{text:"como «y» en español.",lang:"es"}]},
+   {h:2,m:25,o:{ring:true,arc:true},html:`Cuenta de 5 en 5 desde el 12 por los números azules:<br>1 → <b>five</b> · 2 → <b>ten</b> · 3 → <b>quarter</b> · 4 → <b>twenty</b> · 5 → <b>twenty-five</b> · 6 → <b>half</b>`,
+     say:[{text:"Cuenta de cinco en cinco desde el doce.",lang:"es"},{text:"Five, ten, quarter, twenty, twenty-five, half."}]},
+   {h:2,m:20,o:{ring:true,arc:true},html:`Primero los minutos, luego <b class="past">past</b> y luego <b>la hora que es</b>:${BIG(htmlEN(2,20))}= las dos y veinte`,
+     say:[{text:"Primero los minutos, luego",lang:"es"},{text:"past,"},{text:"y luego la hora que es.",lang:"es"},{text:"Twenty past two."}]}],
+  [{h:5,m:40,o:{ring:true,arc:true},html:`En la mitad <b class="to">izquierda 🟠</b> decimos <b class="to">to</b>, como «<b>menos</b>» en español: contamos los minutos que <b>faltan</b> para llegar al 12.`,
+     say:[{text:"En la mitad izquierda, la naranja, decimos",lang:"es"},{text:"to,"},{text:"como «menos» en español. Contamos los minutos que faltan para llegar al doce.",lang:"es"}]},
+   {h:5,m:35,o:{ring:true,arc:true},html:`Cuenta <b>hacia atrás</b> desde el 12 por los números naranjas:<br>11 → <b>five to</b> · 10 → <b>ten to</b> · 9 → <b>quarter to</b> · 8 → <b>twenty to</b> · 7 → <b>twenty-five to</b>`,
+     say:[{text:"Cuenta hacia atrás desde el doce.",lang:"es"},{text:"Five to, ten to, quarter to, twenty to, twenty-five to."}]},
+   {h:5,m:40,o:{ring:true,arc:true},html:`⚠️ Y la hora es la <b>siguiente</b>, como en español: las <b>seis</b> menos veinte${BIG(htmlEN(5,40))}La aguja corta ya casi llega al 6.`,
+     say:[{text:"Y la hora es la siguiente, como en español: las seis menos veinte.",lang:"es"},{text:"Twenty to six."}]}],
+  [{h:9,m:10,o:{ring:true},html:`Resumen:<br>🔵 Aguja larga a la <b class="past">derecha → past + la hora que es</b> (= y)<br>🟠 A la <b class="to">izquierda → to + la hora siguiente</b> (= menos)<br>🟢 En el 12 → <b class="oc">o'clock</b>`,
+     say:[{text:"A la derecha:",lang:"es"},{text:"past,"},{text:"y la hora que es. A la izquierda:",lang:"es"},{text:"to,"},{text:"y la hora siguiente. En el doce:",lang:"es"},{text:"o'clock."}]},
+   {h:9,m:50,o:{ring:true,arc:true},html:`Truco: piensa primero en español.<br>«Las diez menos diez» →${BIG(htmlEN(9,50))}`,
+     say:[{text:"Truco: piensa primero en español. Las diez menos diez.",lang:"es"},{text:"Ten to ten."}]}]
+];
+const progKey=()=>"prog2_"+PLAYER;
+const getProg=()=>store.get(progKey(),{});
+const starsOf=(u,s)=>getProg()[u+"_"+s]||0;
+function stepOpen(u,s){
+  if(u===0&&s===0)return true;
+  if(s>0)return starsOf(u,s-1)>=2;
+  return starsOf(u-1,UNITS[u-1].steps.length-1)>=2;
+}
+const seenKey=(u,st)=>"seen2_"+PLAYER+"_"+u+"_"+st;
+const seenOf=(u,st)=>store.get(seenKey(u,st),[]);
+const missKey=()=>"miss_"+PLAYER;
+function renderPlayers(){
+  const box=$("players");box.innerHTML="";
+  PLAYERS.forEach((n,i)=>{
+    if(editing===i){const inp=document.createElement("input");inp.className="pl-in";inp.value=n;inp.maxLength=16;
+      const save=()=>{PLAYERS[i]=inp.value.trim()||("Jugador "+(i+1));store.set("players",PLAYERS);editing=-1;renderPlayers();};
+      inp.addEventListener("keydown",e=>{if(e.key==="Enter")save();});inp.addEventListener("blur",save);box.appendChild(inp);setTimeout(()=>inp.focus(),0);return;}
+    const b=document.createElement("button");b.className="pl"+(i===PLAYER?" sel":"");b.textContent="🧒 "+n;
+    b.onclick=()=>{PLAYER=i;store.set("player",i);renderPlayers();renderPath();};box.appendChild(b);
+  });
+  const e=document.createElement("button");e.className="pl-edit";e.title="Cambiar nombre";e.textContent="✏️";e.onclick=()=>{editing=PLAYER;renderPlayers();};box.appendChild(e);
+}
+function renderPath(){
+  const box=$("path");box.innerHTML="";let nextFound=false;
+  UNITS.forEach((U,u)=>{
+    const open0=stepOpen(u,0);
+    const d=document.createElement("div");d.className="unit"+(open0?"":" locked");
+    d.innerHTML=`<h3>${U.ico} ${u+1}. ${U.name}</h3><div class="vs">${U.sub}</div>`;
+    const row=document.createElement("div");row.className="steps";
+    U.steps.forEach((id,s)=>{
+      const st=STEP_INFO[id],open=stepOpen(u,s),stars=starsOf(u,s);
+      const b=document.createElement("button");let cls="step";
+      if(!open)cls+=" lock";else if(stars>=2)cls+=" done";else if(!nextFound){cls+=" next";nextFound=true;}
+      b.className=cls;
+      const tot=U.mins.length*12,seen=Math.min(seenOf(u,id).length,tot);
+      b.innerHTML=`<div class="c">${open?st.ico:"🔒"}</div><small>${id==="mix"&&u===UNITS.length-1?"Desafío final":st.name}</small><div class="st">${stars?"⭐".repeat(stars):""}</div>${open&&id!=="mix"?`<div class="cnt">${seen}/${tot}</div>`:""}`;
+      if(open)b.onclick=()=>startPathStep(u,s);
+      row.appendChild(b);
+    });
+    d.appendChild(row);box.appendChild(d);
+  });
+}
+
+/* =================== CHOOSING WHICH TIMES TO ASK =================== */
+// a "type" is the minute pattern (o'clock, five past, ... five to): 12 of them.
+// First the types not yet practised in this step, then the ones they get wrong come back more often.
+function buildDeck(stepId,n,mins,usePath){
+  mins=mins||MINS;
+  const miss=store.get(missKey(),{});
+  const missT=store.get("missT_"+PLAYER,{});
+  let chosen=[];
+  if(usePath){
+    const seen=seenOf(stepId);
+    chosen=shuffle(mins.filter(m=>!seen.includes(m))).slice(0,stepId==="learn"?n:Math.ceil(n/2));
+  }
+  let pool=mins.filter(m=>!chosen.includes(m));
+  while(chosen.length<n){
+    if(!pool.length)pool=mins.slice();
+    const w=pool.map(m=>1+3*(miss[m]||0));let r=Math.random()*w.reduce((a,b)=>a+b,0),i=0;
+    while(i<w.length-1&&r>w[i]){r-=w[i];i++;}
+    chosen.push(pool.splice(i,1)[0]);
+  }
+  chosen=shuffle(chosen);
+  let bag=[];const items=[];
+  chosen.forEach(m=>{
+    const missed=Object.keys(missT).filter(k=>+k.split(":")[1]===m);
+    let h;
+    if(missed.length&&Math.random()<.5)h=+pick(missed).split(":")[0];
+    else{if(!bag.length)bag=shuffle([1,2,3,4,5,6,7,8,9,10,11,12]);h=bag.pop();}
+    items.push({h,m});
+  });
+  for(let i=1;i<items.length;i++)if(items[i].h===items[i-1].h&&items[i].m===items[i-1].m)items[i].h=H12(items[i].h+3);
+  return items;
+}
+function weightedPick(list,wf,n){const pool=list.slice(),out=[];
+  while(out.length<n&&pool.length){const w=pool.map(wf);let r=Math.random()*w.reduce((a,b)=>a+b,0),i=0;while(i<w.length-1&&r>w[i]){r-=w[i];i++;}out.push(pool.splice(i,1)[0]);}
+  return out;}
+function buildUnitDeck(u,stepId,n){
+  const U=UNITS[u];
+  const miss=store.get(missKey(),{}),missT=store.get("missT_"+PLAYER,{});
+  const all=[];U.mins.forEach(m=>{for(let h=1;h<=12;h++)all.push({h,m});});
+  const seen=seenOf(u,stepId);
+  const nRev=(stepId==="learn"||!U.review.length)?0:Math.round(n*.3);
+  const nNew=n-nRev;
+  // first the times not yet practised in this step, then (more often) the ones they get wrong
+  const fresh=shuffle(all.filter(t=>!seen.includes(key(t.h,t.m)))).slice(0,stepId==="learn"?nNew:Math.ceil(nNew*.6));
+  const wf=t=>1+(missT[key(t.h,t.m)]?4:0)+2*(miss[t.m]||0);
+  let rest=weightedPick(all.filter(t=>!fresh.includes(t)),wf,nNew-fresh.length);
+  const rv=[];U.review.forEach(m=>{for(let h=1;h<=12;h++)rv.push({h,m});});
+  const review=weightedPick(rv,wf,nRev);
+  let items=shuffle([...fresh,...rest,...review]).map(t=>({h:t.h,m:t.m}));
+  if(stepId==="learn")items.sort((a,b)=>U.mins.indexOf(a.m)-U.mins.indexOf(b.m)||0);   // learn them in order: five, ten, ...
+  for(let i=1;i<items.length;i++)if(items[i].h===items[i-1].h&&items[i].m===items[i-1].m)items[i].h=H12(items[i].h+3);
+  return items;
+}
+function noteSeen(it){if(!G||!G.path)return;const a=seenOf(G.path.u,G.stepId);const k=key(it.h,it.m);if(U_has(it)&&!a.includes(k)){a.push(k);store.set(seenKey(G.path.u,G.stepId),a);}}
+const U_has=it=>G&&G.path&&UNITS[G.path.u].mins.includes(it.m);
+function noteResult(it,ok){
+  const m=store.get(missKey(),{});m[it.m]=Math.max(0,(m[it.m]||0)+(ok?-1:2));store.set(missKey(),m);
+  const t=store.get("missT_"+PLAYER,{});const k=key(it.h,it.m);if(ok)delete t[k];else t[k]=1;store.set("missT_"+PLAYER,t);
+}
+function distractors(h,m,allowed){
+  allowed=allowed||MINS;
+  const c=[];const P=(hh,mm)=>c.push({h:H12(hh),m:((mm%60)+60)%60});
+  if(m===0){P(h+1,0);P(h-1,0);P(h,30);}
+  else if(m===30){P(h+1,30);P(h-1,30);P(h,0);}
+  else if(m>30){P(h-1,m);P(h,60-m);P(h+1,60-m);}          // 9:45 → quarter to nine, quarter past nine, quarter past ten
+  else{P(h-1,60-m);P(h,60-m);P(h+1,m);}                    // 9:15 → quarter to nine, quarter to ten, quarter past ten
+  const sh=Math.round(m/5)||12;if(!(sh===h&&m===0))P(sh,(h%12)*5);  // hands swapped
+  P(h,m+5);P(h,m-5);
+  const seen=new Set([key(h,m)]);const res=[];
+  c.forEach(t=>{const k=key(t.h,t.m);if(!seen.has(k)&&allowed.includes(t.m)){seen.add(k);res.push(t);}});
+  const out=res.slice(0,2).concat(shuffle(res.slice(2))).slice(0,3);
+  while(out.length<3){const t={h:1+Math.floor(Math.random()*12),m:pick(allowed)};if(!seen.has(key(t.h,t.m))){seen.add(key(t.h,t.m));out.push(t);}}
+  return out;
+}
+
+/* =================== GAME =================== */
+let typedMode=false,G=null,phase="idle",heard="",partial="",lastSpeech=0,listenT0=0,micWatch=null,timerId=null,outcome=null;
+const SPOKEN=["learn","read","trans","toEs"];
+const micOn=()=>!!DICT&&S.mic==="on";
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));window.scrollTo(0,0);}
+function goHome(){phase="idle";stopMic();stopVoice();clearInterval(timerId);clearInterval(micWatch);if(G)G.qid++;renderPath();show("home");tickNow();}
+document.querySelectorAll("[data-home]").forEach(b=>b.addEventListener("click",goHome));
+function stopMic(){try{if(DICT&&dictState!=="idle")DICT.stop().catch(()=>{})}catch(e){}}
+
+function startPathStep(u,s){
+  const U=UNITS[u],id=U.steps[s];
+  const n=id==="learn"?(U.mins.length===1?6:8):(id==="mix"&&u===UNITS.length-1?20:10);
+  startGame(id,buildUnitDeck(u,id,n),{path:{u,s},allowed:[...U.mins,...U.review],
+    mixKinds:u===UNITS.length-1?["choice","set","read","trans","toEs"]:["choice","set","read","trans"],lesson:id==="learn"?LESSONS[u]:null});
+}
+function startFree(mode){
+  const n=mode==="learn"?Math.min(+S.n,12):+S.n;
+  const mins=S.easy==="easy"?EASY:MINS;
+  startGame(mode,buildDeck(mode,n,mins,false),{allowed:mins});
+}
+function startGame(stepId,deck,o){
+  stopVoice();
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume()}catch(e){}
+  let kinds;
+  if(stepId==="mix"){const k=o.mixKinds||["choice","set","read","trans","toEs"];kinds=[];while(kinds.length<deck.length)kinds.push(...shuffle(k));}
+  deck.forEach((it,i)=>{it.kind=stepId==="mix"?kinds[i]:stepId;});
+  G={stepId,path:o.path||null,allowed:o.allowed||MINS,queue:deck.slice(),total:deck.length,score:0,max:deck.length,missed:[],retried:new Set(),qid:0};
+  show("game");
+  if(o.lesson){G.lesson=o.lesson;G.li=0;showLesson();}else nextQ();
+}
+/* ---- short explanation before practising (with the clock and the voice) ---- */
+function showLesson(){
+  G.qid++;stopVoice();hideAll();phase="lesson";
+  const c=G.lesson[G.li],last=G.li===G.lesson.length-1;
+  $("g-prog").style.width="0%";$("g-score").textContent="📖";
+  $("g-ask").textContent="📖 Explicación "+(G.li+1)+" de "+G.lesson.length;
+  $("g-main").innerHTML=`<div class="clockbox">${clockSVG(c.h,c.m,c.o)}</div>${c.o.ring?'<div class="clocklegend">números <b class="past">azules: past</b> · números <b class="to">naranjas: to</b></div>':""}<div class="lesson">${c.html}</div>`;
+  const nb=document.createElement("div");nb.className="btns";
+  nb.innerHTML=`${G.li?'<button class="btn small" id="l-prev">← Atrás</button>':""}<button class="btn small" id="l-hear">🔊 Escuchar</button><button class="btn go" id="l-next">${last?"¡A practicar! →":"Siguiente →"}</button>`;
+  $("g-choices").appendChild(nb);
+  $("l-hear").onclick=()=>out(c.say);
+  if($("l-prev"))$("l-prev").onclick=()=>{G.li--;showLesson();};
+  $("l-next").onclick=lessonNext;
+  out(c.say);
+}
+function lessonNext(){if(phase!=="lesson")return;if(G.li<G.lesson.length-1){G.li++;showLesson();}else{G.lesson=null;nextQ();}}
+function setProg(){$("g-prog").style.width=(100*(G.total-G.queue.length)/G.total)+"%";$("g-score").textContent="⭐ "+G.score;}
+function finishOrNext(){if(!G.queue.length)endGame();else nextQ();}
+function advance(ok){
+  const it=G.queue.shift();noteSeen(it);
+  if(it.kind!=="learn")noteResult(it,ok);
+  if(ok){if(!G.retried.has(key(it.h,it.m)))G.score++;}
+  else{if(!G.missed.some(x=>x.h===it.h&&x.m===it.m))G.missed.push(it);
+    if(!G.retried.has(key(it.h,it.m))){G.retried.add(key(it.h,it.m));G.queue.splice(Math.min(3,G.queue.length),0,{...it});}}
+}
+function hideAll(){typedMode=false;["g-prompt","g-type","g-think","g-reveal"].forEach(i=>$(i).style.display="none");$("g-choices").innerHTML="";$("g-tip").innerHTML="";}
+function helpClock(it){      // show the coloured slice and the past/to numbers on the clock already on screen
+  const cb=$("g-main").querySelector(".clockbox");
+  if(cb&&!cb.classList.contains("drag"))cb.innerHTML=clockSVG(it.h,it.m,{ring:it.m!==0,arc:true});
+  $("g-tip").innerHTML=`<div class="tip">${tipFor(it.h,it.m)}</div>`;
+  if($("g-hint"))$("g-hint").remove();
+}
+function answerHTML(it,lang,noClock){
+  const main=lang==="es"?`<div class="en">${htmlES(it.h,it.m)}</div><div class="esl">${htmlEN(it.h,it.m)}</div>`
+                         :`<div class="en">${htmlEN(it.h,it.m)}</div><div class="esl">${htmlES(it.h,it.m)}</div>`;
+  return `<div class="answer">${noClock?"":`<div class="clockbox mini">${clockSVG(it.h,it.m,{arc:true})}</div>`}<div class="txt">${main}</div></div>`;
+}
+
+function nextQ(){
+  G.qid++;stopVoice();clearInterval(timerId);clearInterval(micWatch);
+  hideAll();setProg();
+  const it=G.queue[0],K=it.kind;
+  const retry=G.retried.has(key(it.h,it.m))?'<div class="note" style="font-size:16px">🔁 ¡Otra oportunidad!</div>':"";
+  $("g-go").textContent="🎤 ¡Ahora tú!";$("g-rep").style.display="";
+  if(K==="learn"){
+    $("g-ask").textContent="Aprende esta hora";
+    const showRing=it.m!==0&&it.m!==30;
+    $("g-main").innerHTML=`<div class="clockbox">${clockSVG(it.h,it.m,{ring:showRing,arc:true})}</div><div class="clocklegend">${it.m===0?'aguja larga en el 12 → <b class="oc">o\'clock</b>':it.m<=30?'aguja larga a la derecha 🔵 → <b class="past">past</b> + la hora que es':'aguja larga a la izquierda 🟠 → <b class="to">to</b> + la hora siguiente'}</div>
+      <div class="big">${htmlEN(it.h,it.m)}</div><p class="sub">${htmlES(it.h,it.m)}</p>`;
+    $("g-tip").innerHTML=`<div class="tip">${tipFor(it.h,it.m)}</div>`;
+    $("g-go").textContent=micOn()?"🎤 ¡Repite conmigo!":"Siguiente →";
+    $("g-spacenote").textContent=micOn()?"o pulsa la barra espaciadora":"";
+    phase="prompt";$("g-prompt").style.display="";
+    sayEN(it.h,it.m);
+    return;
+  }
+  if(K==="choice")return renderChoice(it,retry);
+  if(K==="set")return renderSet(it,retry);
+  $("g-spacenote").textContent="o pulsa la barra espaciadora";
+  if(K==="read"){
+    $("g-ask").innerHTML="What time is it? <b>Dilo en inglés</b>";
+    $("g-main").innerHTML=`<div class="clockbox" id="g-rclock">${clockSVG(it.h,it.m)}</div><div><button class="btn small" id="g-hint">💡 Pista</button></div>${retry}`;
+    $("g-hint").onclick=()=>{helpClock(it);$("g-hint").remove();};
+    out([{text:"What time is it?"}]);
+  }else if(K==="trans"){
+    $("g-ask").textContent="¿Cómo se dice en inglés?";
+    $("g-main").innerHTML=`<div class="big es">${phraseES(it.h,it.m)}</div>${retry}`;
+    $("g-rep").style.display="none";
+  }else if(K==="toEs"){
+    $("g-ask").innerHTML="Escucha… y <b>dilo en español</b> 🇪🇸";
+    const canHear=useClaude()||!!synth;
+    $("g-main").innerHTML=`<button class="speaker" id="g-spk" title="Escuchar">🔊</button>
+      <div class="big" id="g-hidden" style="${canHear?"display:none":""}">${htmlEN(it.h,it.m)}</div>
+      ${canHear?'<div><button class="btn small" id="g-peek">👀 Ver escrito</button></div>':""}${retry}`;
+    $("g-spk").onclick=()=>sayEN(it.h,it.m);
+    if($("g-peek"))$("g-peek").onclick=()=>{$("g-hidden").style.display="";$("g-peek").remove();};
+    $("g-rep").style.display="none";
+    sayEN(it.h,it.m);
+  }
+  if(!micOn()){if(S.kb==="on")showType(it);else startThinking();return;}
+  phase="prompt";$("g-prompt").style.display="";
+}
+$("g-rep").addEventListener("click",()=>{if(phase!=="prompt")return;const it=G.queue[0];
+  if(it.kind==="read")out([{text:"What time is it?"}]);else sayEN(it.h,it.m);});
+
+/* ---- no microphone (iPad): answer with the keyboard's dictation 🎤 or by typing ---- */
+function showType(it){
+  phase="type";typedMode=false;
+  $("g-reveal").style.display="none";$("g-type").style.display="";
+  const es=it.kind==="toEs";
+  $("g-in").value="";$("g-in").lang=es?"es":"en";
+  $("g-in").placeholder=es?"Toca aquí y dilo en español con el 🎤":"Toca aquí y dilo en inglés con el 🎤";
+  $("g-kbhint").innerHTML=es?"🇪🇸 Usa el teclado en <b>español</b> (🌐 para cambiar) · también puedes escribirlo"
+                            :"🇬🇧 Usa el teclado en <b>inglés</b> (🌐 para cambiar) · también puedes escribirlo";
+  $("g-rep2").style.display=(it.kind==="read"||it.kind==="toEs")?"":"none";
+  try{$("g-in").focus({preventScroll:true})}catch(e){}
+}
+function submitTyped(){
+  if(phase!=="type")return;
+  const v=$("g-in").value.trim();
+  if(!v){try{$("g-in").focus()}catch(e){}return;}
+  heard=v;partial="";typedMode=true;phase="think";
+  $("g-type").style.display="none";
+  reveal();
+}
+$("g-tcheck").addEventListener("click",submitTyped);
+$("g-in").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();submitTyped();}});
+$("g-in").addEventListener("input",()=>{          // dictation finished with the right time: correct it straight away
+  if(phase!=="type")return;
+  clearTimeout(window.__tyT);
+  window.__tyT=setTimeout(()=>{if(phase==="type"&&judge(G.queue[0],$("g-in").value)==="ok")submitTyped();},700);
+});
+$("g-rep2").addEventListener("click",()=>{const it=G.queue[0];if(it.kind==="read")out([{text:"What time is it?"}]);else sayEN(it.h,it.m);});
+function goAnswer(){
+  if(phase!=="prompt")return;
+  const it=G.queue[0];
+  if(it.kind==="learn"&&!micOn()){phase="idle";stopVoice();advance(true);finishOrNext();return;}
+  stopVoice();startThinking();
+}
+$("g-go").addEventListener("click",goAnswer);
+document.addEventListener("keydown",e=>{
+  if(!$("game").classList.contains("on"))return;
+  if(e.target&&e.target.tagName==="INPUT")return;
+  if((e.key===" "||e.key==="Enter")&&phase==="prompt"){e.preventDefault();goAnswer();}
+  else if((e.key===" "||e.key==="Enter")&&phase==="lesson"){e.preventDefault();lessonNext();}
+  else if((e.key===" "||e.key==="Enter")&&phase==="set"){e.preventDefault();$("g-check")&&$("g-check").click();}
+});
+
+/* ---- speaking: listen until they stop talking ---- */
+function startThinking(){       // runs straight from a tap/key, so the microphone may start
+  const it=G.queue[0];
+  $("g-prompt").style.display="none";$("g-think").style.display="";$("g-reveal").style.display="none";
+  phase="think";heard="";partial="";outcome=null;typedMode=false;$("g-type").style.display="none";
+  $("g-heard").innerHTML="";
+  if(micOn()){
+    $("g-timer").style.display="none";$("g-mic").style.display="";
+    listen(it.kind==="toEs"?"es":"en");
+    lastSpeech=0;listenT0=performance.now();
+    clearInterval(micWatch);
+    micWatch=setInterval(()=>{
+      if(phase!=="think"){clearInterval(micWatch);return;}
+      const now=performance.now(),el=(now-listenT0)/1000,spoke=(heard+partial).trim().length>0;
+      if(spoke&&now-lastSpeech>2300)reveal();                           // they finished talking
+      else if(!spoke&&el>+S.secs+7)reveal();                            // nothing at all
+      else if(el>+S.secs+18)reveal();                                   // hard limit
+    },150);
+  }else{
+    $("g-mic").style.display="none";$("g-timer").style.display="";
+    runTimer(+S.secs,reveal);
+  }
+}
+function listen(lang){
+  $("g-mic").className="mic on";
+  $("g-mic-t").textContent=lang==="es"?"🎤 Te escucho… ¡habla en español!":"🎤 Te escucho… ¡habla en inglés!";
+  let p;
+  try{p=DICT.start({language:lang});}catch(err){p=Promise.reject(err);}
+  Promise.resolve(p).catch(err=>{
+    const c=err&&err.code;$("g-mic").className="mic";
+    if(c==="not_granted"){S.mic="off";$("g-mic-t").textContent="🚫 Sin permiso para el micrófono. En iPhone/iPad: Ajustes → General → Teclado → Activar dictado";}
+    else if(c==="dismissed")$("g-mic-t").textContent="🎤 Hay que permitir el micrófono";
+    else if(c!=="stopped")$("g-mic-t").textContent="🎤 El micro no responde ahora — pulsa «Ya lo he dicho»";
+  });
+}
+function showHeard(){$("g-heard").innerHTML=(heard+" "+partial).trim()?'<span class="waves"><i></i><i></i><i></i><i></i><i></i></span> ¡Te oigo!':"";}
+function judge(it,text){return it.kind==="toEs"?judgeES(text,it.h,it.m):judgeEN(text,it.h,it.m);}
+function checkEarly(){if(phase!=="think")return;if(judge(G.queue[0],heard+" "+partial)==="ok"){outcome="ok";reveal();}}
+function runTimer(secs,done){
+  const ring=$("g-ring"),num=$("g-num"),box=$("g-timer"),C=345.6,t0=performance.now();let last=null;
+  box.classList.remove("urgent");ring.style.stroke="#ffc23c";clearInterval(timerId);
+  const tick=()=>{const left=Math.max(0,secs-(performance.now()-t0)/1000);
+    ring.setAttribute("stroke-dashoffset",(C*(1-left/secs)).toFixed(1));const sh=Math.ceil(left);
+    if(sh!==last){last=sh;num.textContent=sh;if(sh<=3&&sh>0){box.classList.add("urgent");ring.style.stroke="#f43f5e";sfxTick();}}
+    if(left<=0){clearInterval(timerId);done();}};
+  tick();timerId=setInterval(tick,50);
+}
+$("g-skip").addEventListener("click",()=>reveal());
+
+async function reveal(){
+  if(phase!=="think")return;
+  clearInterval(timerId);clearInterval(micWatch);
+  const it=G.queue[0];
+  let res=null;
+  if(typedMode){res=judge(it,heard);try{$("g-in").blur()}catch(e){}}
+  else if(micOn()){
+    phase="stopping";
+    $("g-mic").className="mic";$("g-mic-t").textContent="⏳ Un momento…";
+    try{await Promise.race([DICT.stop(),wait(4500)]);}catch(e){}
+    res=outcome==="ok"?"ok":judge(it,heard+" "+partial);
+  }
+  phase="reveal";
+  $("g-think").style.display="none";$("g-reveal").style.display="";
+  const lang=it.kind==="toEs"?"es":"en";
+  $("g-answer").innerHTML=answerHTML(it,lang,it.kind==="read"||it.kind==="learn");
+  const fb=$("g-result");fb.className="feedback";fb.textContent="";
+  if(it.kind==="toEs"&&$("g-hidden"))$("g-hidden").style.display="";
+  if(res===null){                                  // no microphone: they check themselves
+    $("g-self").style.display="";$("g-auto").style.display="none";
+    lang==="es"?out([{text:phraseES(it.h,it.m)+".",lang:"es"}]):sayEN(it.h,it.m);
+    return;
+  }
+  $("g-self").style.display="none";$("g-auto").style.display="";
+  const said=(heard+" "+partial).trim();
+  outcome=res;
+  if(res==="ok"){
+    fb.textContent=pick(["Yeah! 🎉","¡Perfecto! ⭐","¡Muy bien! 🚀"]);fb.className="feedback good";
+    $("g-retry").style.display="none";$("g-override").style.display="none";
+    $("g-answer").innerHTML="";                    // no need to show it again: they got it
+    sfxGood();burst(6);
+    autoNext(out([{text:pick(PRAISE),praise:true}]),350);
+  }else{
+    $("g-retry").style.display="";$("g-override").style.display=said?"":"none";
+    sfxBad();
+    if(res==="almost"){
+      fb.innerHTML=`¡Casi! En británico se dice <i>${phraseEN(it.h,it.m)}</i>`;fb.className="feedback almost";
+      autoNext(out([{text:"Almost!",praise:true},{text:cap(phraseEN(it.h,it.m))+"."}]),2600);
+    }else{
+      fb.textContent=said?"Oops! Es así 👇":"No te he oído 🤔 ¡Habla más alto!";fb.className="feedback bad";
+      helpClock(it);
+      const ans=lang==="es"?{text:phraseES(it.h,it.m)+".",lang:"es"}:{text:cap(phraseEN(it.h,it.m))+"."};
+      autoNext(out(said?[{text:"Oops!",praise:true},ans]:[ans]),2800);
+    }
+  }
+}
+function autoNext(promise,extra){
+  const id=++G.qid;
+  Promise.resolve(promise).then(()=>wait(extra)).then(()=>{
+    if(G&&G.qid===id&&phase==="reveal"){advance(outcome==="ok");finishOrNext();}
+  });
+}
+$("g-next").addEventListener("click",()=>{if(phase!=="reveal")return;G.qid++;stopVoice();advance(outcome==="ok");finishOrNext();});
+$("g-retry").addEventListener("click",()=>{if(phase!=="reveal")return;G.qid++;stopVoice();$("g-tip").innerHTML="";if(typedMode)showType(G.queue[0]);else startThinking();});
+$("g-override").addEventListener("click",()=>{
+  if(phase!=="reveal")return;outcome="ok";$("g-override").style.display="none";$("g-retry").style.display="none";
+  $("g-result").textContent="¡Vale! Te creo 😄";$("g-result").className="feedback good";sfxGood();
+  autoNext(out([{text:"Great job!",praise:true}]),500);
+});
+$("g-yes").addEventListener("click",()=>{if(phase!=="reveal")return;phase="idle";advance(true);sfxGood();burst(4);out([{text:pick(PRAISE),praise:true}]);$("g-reveal").style.display="none";setTimeout(finishOrNext,900);});
+$("g-no").addEventListener("click",()=>{if(phase!=="reveal")return;phase="idle";advance(false);sfxBad();$("g-reveal").style.display="none";setTimeout(finishOrNext,700);});
+
+/* ---- Elige (4 options) ---- */
+function renderChoice(it,retry){
+  phase="choice";
+  const al=G.allowed,both=al.some(m=>m>0&&m<=30)&&al.some(m=>m>30);
+  const sub=(both&&it.m!==0&&Math.random()<.3)?"side":pick(["c2p","p2c","es2p"]);it.sub=sub;
+  if(sub==="side")return renderSide(it,retry);
+  const opts=shuffle([{h:it.h,m:it.m},...distractors(it.h,it.m,al)]);
+  if(sub==="c2p"){$("g-ask").textContent="¿Qué hora es?";$("g-main").innerHTML=`<div class="clockbox" style="width:min(240px,62vw)">${clockSVG(it.h,it.m)}</div>${retry}`;}
+  else if(sub==="p2c"){$("g-ask").textContent="Toca el reloj que marca…";$("g-main").innerHTML=`<div class="big">${htmlEN(it.h,it.m)}</div>${retry}`;sayEN(it.h,it.m);}
+  else{$("g-ask").textContent="¿Cómo se dice en inglés?";$("g-main").innerHTML=`<div class="big es">${phraseES(it.h,it.m)}</div>${retry}`;}
+  const box=document.createElement("div");box.className="choices";
+  opts.forEach(o=>{
+    const b=document.createElement("button");
+    const ok=o.h===it.h&&o.m===it.m;b.dataset.ok=ok?"1":"";
+    if(sub==="p2c"){b.className="choice clk";b.innerHTML=clockSVG(o.h,o.m,{tint:false});b.setAttribute("aria-label",digital(o.h,o.m));}
+    else{b.className="choice";b.textContent=phraseEN(o.h,o.m);}
+    b.addEventListener("click",()=>answerChoice(b,ok,it));box.appendChild(b);
+  });
+  $("g-choices").appendChild(box);
+  const fb=document.createElement("div");fb.className="feedback";fb.id="g-cfb";$("g-choices").appendChild(fb);
+}
+function renderSide(it,retry){   // "is it past or to?" — the key decision, on its own
+  $("g-ask").innerHTML="¿Se dice <b class=\"past\">past</b> o <b class=\"to\">to</b>?";
+  $("g-main").innerHTML=`<div class="clockbox" style="width:min(240px,62vw)">${clockSVG(it.h,it.m)}</div>${retry}`;
+  const box=document.createElement("div");box.className="choices";
+  [["past",it.m<=30],["to",it.m>30]].forEach(([w,ok])=>{
+    const b=document.createElement("button");b.className="choice";b.dataset.ok=ok?"1":"";
+    b.innerHTML=w==="past"?'<span class="past">past</span><div style="font-size:15px;font-weight:500">🔵 mitad derecha</div>':'<span class="to">to</span><div style="font-size:15px;font-weight:500">🟠 mitad izquierda</div>';
+    b.addEventListener("click",()=>answerChoice(b,ok,it));box.appendChild(b);});
+  $("g-choices").appendChild(box);
+  const fb=document.createElement("div");fb.className="feedback";fb.id="g-cfb";$("g-choices").appendChild(fb);
+}
+function answerChoice(btn,ok,it){
+  if(phase!=="choice")return;phase="reveal-c";
+  document.querySelectorAll("#g-choices .choice").forEach(b=>{b.disabled=true;if(b.dataset.ok)b.classList.add("right");});
+  const fb=$("g-cfb");const id=++G.qid;
+  if(ok){fb.innerHTML=pick(["¡Correcto! 🎉","¡Eso es! ⭐","¡Bien hecho! 🚀"])+(it.sub==="side"?` <span style="color:var(--ink)">${htmlEN(it.h,it.m)}</span>`:"");fb.className="feedback good";sfxGood();burst(5);}
+  else{btn.classList.add("wrong");fb.innerHTML=`Oops! Es <i>${htmlEN(it.h,it.m)}</i>`;fb.className="feedback bad";sfxBad();helpClock(it);}
+  const nb=document.createElement("div");nb.className="btns";nb.innerHTML='<button class="btn go">Siguiente →</button>';
+  nb.firstChild.onclick=()=>{if(G.qid!==id)return;G.qid++;stopVoice();advance(ok);finishOrNext();};
+  $("g-choices").appendChild(nb);
+  const pr=ok?out(it.sub==="side"?[{text:pick(PRAISE),praise:true},{text:cap(phraseEN(it.h,it.m))+"."}]:[{text:pick(PRAISE),praise:true}]):out([{text:"Oops!",praise:true},{text:cap(phraseEN(it.h,it.m))+"."}]);
+  Promise.resolve(pr).then(()=>wait(ok?450:2600)).then(()=>{if(G&&G.qid===id){advance(ok);finishOrNext();}});
+}
+
+/* ---- Pon la hora (drag the hands) ---- */
+function renderSet(it,retry){
+  phase="set";const st0=(it.h===12&&it.m===0)?{h:6,m:0}:{h:12,m:0};
+  $("g-ask").innerHTML="Pon las agujas en…";
+  $("g-main").innerHTML=`<div class="big">${htmlEN(it.h,it.m)}</div>
+    <div class="clockbox drag" id="g-drag">${clockSVG(st0.h,st0.m,{ring:G.allowed.some(m=>m!==0&&m!==30),arc:true})}</div>
+    <div class="clocklegend">Arrastra la aguja <b style="color:#e11d48">corta (horas)</b> y la <b>larga (minutos)</b> · <b class="past">past</b> a la derecha, <b class="to">to</b> a la izquierda</div>${retry}
+    <div class="btns"><button class="btn go" id="g-check">Comprobar ✔</button><button class="btn small" id="g-hear">🔊 Escuchar</button></div>
+    <div class="feedback" id="g-sfb"></div>`;
+  const st=makeDraggable($("g-drag"),st0);
+  $("g-hear").onclick=()=>sayEN(it.h,it.m);
+  sayEN(it.h,it.m);
+  $("g-check").onclick=()=>{
+    if(phase!=="set")return;phase="reveal-s";
+    const ok=st.h===it.h&&st.m===it.m;const fb=$("g-sfb");const id=++G.qid;
+    $("g-check").disabled=true;$("g-drag").style.pointerEvents="none";
+    if(ok){fb.textContent=pick(["¡Perfecto! 🎉","¡Exacto! ⭐","¡Muy bien! 🚀"]);fb.className="feedback good";sfxGood();burst(6);}
+    else{
+      fb.innerHTML=`Oops! Has puesto las ${digital(st.h,st.m)}. Mira cómo es 👆`;fb.className="feedback bad";sfxBad();
+      setHands($("g-drag").querySelector("svg"),it.h,it.m);
+      $("g-tip").innerHTML=`<div class="tip">${tipFor(it.h,it.m)}</div>`;
+    }
+    $("g-sfb").insertAdjacentHTML("beforeend",ok?"":`<div style="font-size:20px;color:var(--ink);margin-top:4px">${htmlEN(it.h,it.m)} = ${htmlES(it.h,it.m).toLowerCase()}</div>`);
+    $("g-check").textContent="Siguiente →";$("g-check").disabled=false;
+    $("g-check").onclick=()=>{if(G.qid!==id)return;G.qid++;stopVoice();advance(ok);finishOrNext();};
+    const pr=ok?out([{text:pick(PRAISE),praise:true}]):out([{text:"Oops!",praise:true},{text:cap(phraseEN(it.h,it.m))+"."}]);
+    Promise.resolve(pr).then(()=>wait(ok?500:2600)).then(()=>{if(G&&G.qid===id){advance(ok);finishOrNext();}});
+  };
+}
+
+/* =================== END =================== */
+function endGame(){
+  phase="idle";stopVoice();
+  const pct=G.max?G.score/G.max:0,stars=pct>=.9?3:pct>=.6?2:1;
+  $("en-stars").textContent="⭐".repeat(stars)+"☆".repeat(3-stars);
+  $("en-msg").textContent=stars===3?"¡Eres un crack! 🏆":stars===2?"¡Muy bien! 💪":"¡Sigue practicando! 🌱";
+  $("en-score").textContent="Puntos: "+G.score+" de "+G.max;
+  $("en-unlock").textContent="";$("en-path").style.display=G.path!=null?"":"none";
+  if(G.path){
+    const {u,s}=G.path,U=UNITS[u],P=getProg(),k=u+"_"+s;
+    if(stars>(P[k]||0)){P[k]=stars;store.set(progKey(),P);}
+    if(stars>=2){
+      if(s+1<U.steps.length){const n=STEP_INFO[U.steps[s+1]];$("en-unlock").textContent="🔓 ¡Desbloqueado: "+n.ico+" "+n.name+"!";}
+      else if(u+1<UNITS.length)$("en-unlock").textContent="🎉 ¡Bloque terminado! Nuevo: "+UNITS[u+1].ico+" "+UNITS[u+1].name;
+      else $("en-unlock").textContent="🏆 ¡Has terminado todo el camino! ¡Eres un campeón de la hora!";
+    }else $("en-unlock").textContent="Necesitas ⭐⭐ para seguir. ¡Otra vez!";
+  }
+  const box=$("en-missed");box.innerHTML="";
+  if(G.missed.length){box.innerHTML="<h3>📌 Para repasar</h3>";const l=document.createElement("div");l.className="tlist";G.missed.forEach(t=>l.appendChild(trow(t.h,t.m)));box.appendChild(l);}
+  if(stars>=2)burst(stars===3?30:14);
+  out([{text:stars===3?"Yeah! You are a champion!":stars===2?"Well done!":"Keep practising! You can do it!",praise:true}]);
+  show("end");
+}
+$("en-again").addEventListener("click",()=>{if(G.path)startPathStep(G.path.u,G.path.s);else startFree(G.stepId);});
+$("en-path").addEventListener("click",goHome);
+
+/* =================== TABLE =================== */
+let tbHour=9;
+function trow(h,m){
+  const r=document.createElement("div");r.className="trow";
+  r.innerHTML=`<div><div class="clockbox" style="width:68px">${clockSVG(h,m,{arc:true})}</div><div class="dg">${digital(h,m)}</div></div>
+    <button class="en">${htmlEN(h,m)}</button><button class="esl">${htmlES(h,m)}</button><button class="spk" title="Escuchar">🔊</button>`;
+  r.querySelector(".en").onclick=()=>sayEN(h,m);
+  r.querySelector(".esl").onclick=()=>sayES(h,m);
+  r.querySelector(".spk").onclick=()=>out([{text:cap(phraseEN(h,m))+"."},{text:phraseES(h,m)+".",lang:"es"}]);
+  return r;
+}
+function renderTable(){
+  const hb=$("tb-hours");hb.innerHTML="";
+  for(let h=1;h<=12;h++){const b=document.createElement("button");b.textContent=h;b.className=h===tbHour?"sel":"";b.onclick=()=>{tbHour=h;renderTable();};hb.appendChild(b);}
+  const body=$("tb-body");body.innerHTML="";MINS.forEach(m=>body.appendChild(trow(tbHour,m)));
+}
+
+/* =================== HOME =================== */
+const FREE=[
+  {id:"learn",ico:"📖",name:"Aprende",d:"Mira el reloj, escucha y repite."},
+  {id:"choice",ico:"🎯",name:"Elige",d:"Test de 4 opciones: relojes y frases."},
+  {id:"set",ico:"🕘",name:"Pon la hora",d:"Mueve las agujas hasta la hora que oyes."},
+  {id:"read",ico:"🗣️",name:"Lee el reloj",d:"Sale un reloj: di la hora en inglés. 🎤"},
+  {id:"trans",ico:"🔤",name:"Tradúcelo",d:"«Son las nueve menos cuarto» → en inglés. 🎤"},
+  {id:"toEs",ico:"🤔",name:"¿Qué hora es?",d:"Escuchas en inglés y lo dices en español. 🎤"},
+  {id:"mix",ico:"🏆",name:"Mezcla",d:"Todo mezclado."},
+  {id:"table",ico:"📋",name:"La tabla",d:"Todas las horas: toca para escuchar."}];
+FREE.forEach(f=>{const b=document.createElement("button");b.className="mode";b.innerHTML=`<div class="ico">${f.ico}</div><h3>${f.name}</h3><p>${f.d}</p>`;
+  b.onclick=()=>{if(f.id==="table"){renderTable();show("table");}else startFree(f.id);};$("freeModes").appendChild(b);});
+let nowT=null;
+function tickNow(){
+  const d=new Date();let m=Math.round(d.getMinutes()/5)*5,h=d.getHours()%12||12;if(m===60){m=0;h=H12(h+1);}
+  nowT={h,m};$("nowTxt").innerHTML=htmlEN(h,m);$("heroClock").innerHTML=clockSVG(h,m);
+}
+$("nowBtn").onclick=()=>nowT&&sayEN(nowT.h,nowT.m);
+tickNow();setInterval(()=>{if($("home").classList.contains("on"))tickNow();},30000);
+renderPlayers();renderPath();
+</script>
+</body>
+</html>
